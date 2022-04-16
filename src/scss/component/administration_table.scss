@@ -1,0 +1,22 @@
+.administration-menu-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.administration-menu-container-table {
+  display: flex;
+  align-items: center;
+}
+
+.administration-menu-icon {
+  font-size: 25px;
+}
+
+.administration-actions-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.edit-icon:hover {
+  cursor: pointer;
+}
