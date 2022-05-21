@@ -1,28 +1,23 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import TopbarNavAdministration from './TopbarNavAdministration';
-import { hasPermission } from '../../../../utils/userPermissions';
-
-import TopNavRankings from './TopNavRankings';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import TopbarNavAdministration from "./TopbarNavAdministration";
+import { hasPermission } from "../../../../utils/userPermissions";
+import TopNavPrestamos from "./TopNavPrestamos";
+import TopNavRankings from "./TopNavRankings";
 
 const TopbarNav = ({ users }) => {
   const { userPermissions } = users;
 
   return (
-    <nav className='topbar__nav'>
-
-      {/* 
-          Con DropDown
-      */}
-
+    <nav className="topbar__nav">
       {/* {hasPermission('ver-opciones-menu-administración', userPermissions) ? ( */}
-        <TopbarNavAdministration />
-       {/* ) : null} */}
+      <TopbarNavAdministration />
+      {/* ) : null} */}
 
       <TopNavRankings />
-      <TopNavRankings />  
 
+      <TopNavPrestamos />
     </nav>
   );
 };

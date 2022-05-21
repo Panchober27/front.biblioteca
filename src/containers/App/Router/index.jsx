@@ -15,6 +15,8 @@ import {
   Layout,
   HomePage,
   Rankings,
+  Prestamos,
+  CreateEditPrestamo,
 } from '../../index';
 
 /**
@@ -157,6 +159,15 @@ const Router = ({ users, getUserPermissions }) => {
    
             <PrivateRoute exact path='/home'>
               <HomePage />
+            </PrivateRoute>
+
+            <PrivateRoute exact path='/prestamos'>
+              <Prestamos />
+            </PrivateRoute>
+
+            {/* ruta para crear/editar un prestamo. */}
+            <PrivateRoute exact path='/cePrestamo'>
+              <CreateEditPrestamo />
             </PrivateRoute>
 
             <PrivateRoute
