@@ -17,6 +17,7 @@ import {
   Rankings,
   Prestamos,
   CreateEditPrestamo,
+  Books,
 } from '../../index';
 
 /**
@@ -156,7 +157,6 @@ const Router = ({ users, getUserPermissions }) => {
         <Switch>
           <Route exact path='/' component={LogIn} />
           <div className='app-container'>
-   
             <PrivateRoute exact path='/home'>
               <HomePage />
             </PrivateRoute>
@@ -170,17 +170,14 @@ const Router = ({ users, getUserPermissions }) => {
               <CreateEditPrestamo />
             </PrivateRoute>
 
-            <PrivateRoute
-              exact
-              path='/rankings'
-              // hasPermission={hasPermission(
-              //   'ver-listado-calibraciones',  // CAMBIAR POR LA LOGICA PARA LA BIBLIOTECA!
-              //   userPermissions
-              // )}
-            >
-              <Rankings />
+            {/* ruta para mantenedor de libros. */}
+            <PrivateRoute exact path='/books'>
+              <Books />
             </PrivateRoute>
 
+            <PrivateRoute exact path='/rankings'>
+              <Rankings />
+            </PrivateRoute>
           </div>
         </Switch>
       </main>

@@ -5,6 +5,7 @@ import TopbarNavAdministration from "./TopbarNavAdministration";
 import { hasPermission } from "../../../../utils/userPermissions";
 import TopNavPrestamos from "./TopNavPrestamos";
 import TopNavRankings from "./TopNavRankings";
+import TopNavBooks from "./TopNavBooks";
 
 const TopbarNav = ({ users }) => {
   const { userPermissions } = users;
@@ -14,6 +15,9 @@ const TopbarNav = ({ users }) => {
       {/* {hasPermission('ver-opciones-menu-administración', userPermissions) ? ( */}
       <TopbarNavAdministration />
       {/* ) : null} */}
+
+      <TopNavBooks />
+
 
       <TopNavRankings />
 
