@@ -1,0 +1,19 @@
+.tarj {
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  background: rgba(25, 254, 235, 0.685);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.tarj :hover {
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  background: rgba(5, 34, 31, 0.685);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.739);
+}
