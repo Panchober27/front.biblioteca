@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 import MainWrapper from '../MainWrapper';
 import { getUserPermissions } from '../../../redux/reducers/usersReducer';
 import { hasPermission } from '../../../utils/userPermissions';
+import Alumnos from '../../Alumnos/index';
 import {
   LogIn,
   Layout,
@@ -160,6 +161,11 @@ const Router = ({ users, getUserPermissions }) => {
             <PrivateRoute exact path='/home'>
               <HomePage />
             </PrivateRoute>
+
+            <PrivateRoute exact path='/alumnos'>
+              <Alumnos />
+            </PrivateRoute>
+
 
             <PrivateRoute exact path='/prestamos'>
               <Prestamos />
