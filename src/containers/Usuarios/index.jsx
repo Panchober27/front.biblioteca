@@ -4,8 +4,9 @@ import {
   InputField,
   AdministrationTable,
   LoadingMessage,
+  OkCancelButtons,
 } from "../../components/common";
-import { Drawer, Button, Tooltip, Menu, Switch } from "antd";
+import { Drawer, Button, Tooltip, Menu, Switch, Row, Col } from "antd";
 import { FiEdit } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -31,7 +32,6 @@ const Usuarios = ({
 
   // variable de estado: Es editar o Crear Usuario?
   const [isEditing, setIsEditing] = useState(false);
-
 
   // variable de esta: guardar datos en memoria del usuario a crear/editar.
   const [userData, setUserData] = useState({});
@@ -70,13 +70,9 @@ const Usuarios = ({
       key: "otros",
     },
     {
-      title: "Activo",
-      dataIndex: "userActive",
-      key: "userActive",
-    },
-    {
       title: "Acciones",
       dataIndex: "actions",
+      width: 140,
       render: (row, record, index) => (
         <div className="administration-actions-container">
           <Tooltip title="Editar Usuario" placement="right">
@@ -87,6 +83,7 @@ const Usuarios = ({
               onClick={() => {
                 setIsEditing(true);
                 setDrawerVisible(true);
+                setUserData(record);
                 // TODO: añadir toda la logica para editar un usuario.
               }}
             />
@@ -116,24 +113,107 @@ const Usuarios = ({
     {
       title: "Crear Nuevo Usuario",
       onClick: () => {
-        console.log("Usuario");
+        setUserData({});
         setDrawerVisible(true);
       },
     },
   ];
+
+
+
+
+  // useEffect(() => {
+  //   alert('cambio!')
+  // },[userData])
+
 
   // Funcion que renderiza(muestra el drawer)
   const renderUserDrawer = () => (
     <>
       <Drawer
         title={isEditing ? "Editar Usuario" : "Crear Usuario"}
-        placement="right"
-        closeOnClick={false}
-        onClose={() => setDrawerVisible(false)}
         visible={drawerVisible}
-        width={500}
+        destroyOnClose
+        placement="right"
+        width={600}
+        onClose={() => {
+          setUserData({});
+          setDrawerVisible(false);
+          setIsEditing(false);
+        }}
+        onCancelClick={() => {
+          setUserData({});
+          setDrawerVisible(false);
+          setIsEditing(false);
+        }}
+        footer={
+          <OkCancelButtons
+            okTitle={isEditing ? "Guardar" : "Crear"}
+            cancelButtonStyle={{ marginRight: 10 }}
+            cancelTitle="Cancelar"
+            onCancelClick={() => {
+              setUserData({});
+              setDrawerVisible(false);
+              setIsEditing(false);
+            }}
+            onOkClick={() => {}}
+          />
+        }
+        footerStyle={{ display: "flex", justifyContent: "flex-end" }}
       >
-        <p>Contenido del Drawer</p>
+        <>
+          <Row gutter={16}>
+            <Col span={12}>
+              <InputField
+                label="Nombre de Usuario (*)"
+                name="usuario"
+                defaultValue={isEditing ? userData.usuario : null}
+                onChange={(value) => {
+                  setUserData({ ...userData, usuario: value });
+                }}
+              />
+            </Col>
+            <Col span={12}>
+              <InputField
+                label="Nombres (*)"
+                name="nombre"
+                defaultValue={isEditing ? userData.nombre : null}
+                onChange={(value) => {
+                  setUserData({ ...userData, nombre: value });
+                }}
+              />
+            </Col>
+
+            <Col span={12}>
+              <InputField
+                label="Apellidos (*)"
+                name="apellido"
+                defaultValue={isEditing ? userData.apellido : null}
+                onChange={(value) => {
+                  setUserData({ ...userData, apellido: value });
+                }}
+              />
+            </Col>
+
+            <Col span={12}>
+              <InputField
+                label="Email (*)"
+                name="usuario_mail"
+                defaultValue={isEditing ? userData.usuario_mail : null}
+                onChange={(value) => {
+                  setUserData({ ...userData, usuario_mail: value });
+                }}
+              />
+            </Col>
+          </Row>
+          <Button
+            onClick={() => {
+              console.log(userData);
+            }}
+          >
+            ver datos objeto usuario
+          </Button>
+        </>
       </Drawer>
     </>
   );
@@ -155,7 +235,7 @@ const Usuarios = ({
       <h1>Usuarios</h1>
       <AdministrationTable
         columns={userColumns}
-        dataSource={usersList ? usersList : []}
+        dataSource={usersList ? [...usersList] : []}
         options={userTableOptions}
         pagination={false}
       />
