@@ -21,6 +21,7 @@ const AdministrationTable = ({
   options = [],
   tableTitle = '',
   pageSize = 10,
+  size = 'small',
 }) => {
   const [selectedTempData, setSelectedTempData] = useState([]);
 
@@ -37,7 +38,7 @@ const AdministrationTable = ({
   return (
     <Table
       bordered
-      size='small'
+      size={size}
       columns={columns}
       dataSource={
         selectedTempData.length ? [...selectedTempData] : [...dataSource]
