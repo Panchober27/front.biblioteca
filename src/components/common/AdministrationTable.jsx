@@ -20,6 +20,7 @@ const AdministrationTable = ({
   rowKey,
   options = [],
   tableTitle = '',
+  pageSize = 10,
 }) => {
   const [selectedTempData, setSelectedTempData] = useState([]);
 
@@ -41,6 +42,7 @@ const AdministrationTable = ({
       dataSource={
         selectedTempData.length ? [...selectedTempData] : [...dataSource]
       }
+      pageSize={pageSize}
       scroll={{ y: 240 }}
       rowKey={(row) => row[rowKey]}
       pagination={{ showSizeChanger: false }}

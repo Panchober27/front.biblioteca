@@ -92,25 +92,9 @@ const Usuarios = ({
 
   // Hooks de Efecto para exito al crear/editar un usuario
   useEffect(() => {
-    const MySwal = withReactContent(Swal);
     if (onSuccessSaveUser || onSuccessUpdateUser) {
-      MySwal.fire({
-        title: onSuccessSaveUser
-          ? 'Usuario creado correctamente'
-          : onSuccessUpdateUser
-          ? 'Usuario actualizado correctamente'
-          : '',
-        icon: 'success',
-        showConfirmButton: true,
-        timer: 1500,
-      });
       setDrawerVisible(false);
       getUsers();
-      MySwal.showLoading();
-    } else {
-      if (MySwal.isVisible) {
-        MySwal.close();
-      }
     }
   }, [onSuccessSaveUser, onSuccessUpdateUser]);
 
@@ -179,9 +163,9 @@ const Usuarios = ({
             }
           >
             <Switch
-              defaultChecked={record.userActive ? true : false}
+              defaultChecked={record.userActive === 1 ? true : false}
               onClick={() => {
-                // alert('cambiar estado');
+                alert(`record.userActive: ${record.userActive}`);
               }}
             />
           </Tooltip>
@@ -226,6 +210,7 @@ const Usuarios = ({
           setUserData({});
           setDrawerVisible(false);
           setIsEditing(false);
+          setEditPassword(false);
         }}
         onCancelClick={() => {
           setUserData({});
@@ -439,7 +424,8 @@ const Usuarios = ({
         columns={userColumns}
         dataSource={usersList ? [...usersList] : []}
         options={userTableOptions}
-        pagination={false}
+        pagination={true}
+        pageSize={4}
       />
       {renderUserDrawer()}
     </>

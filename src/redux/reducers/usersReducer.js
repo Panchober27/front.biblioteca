@@ -100,7 +100,7 @@ export const getUsers = (neededPerm) => async (dispatch) => {
 
       usersList.forEach((user) => {
         let fullName = user.nombre + " " + user.apellido;
-        let userActive = user.usuario_activo === 1 ? "ACTIVO" : "INACTIVO";
+        let userActive = user.userActive;
 
         user.fullName = fullName;
         user.userActive = userActive;
