@@ -15,7 +15,7 @@ const CustomModal = ({
       title={title}
       visible={visible}
       footer={footer}
-      closable={false}
+      closable={true}
       style={{ top: 20 }}
       width={width}
     >
