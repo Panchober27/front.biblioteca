@@ -93,6 +93,13 @@ const Usuarios = ({
   // Hooks de Efecto para exito al crear/editar un usuario
   useEffect(() => {
     if (onSuccessSaveUser || onSuccessUpdateUser) {
+      message.success(
+        onSuccessSaveUser
+          ? 'Usuario creado correctamente'
+          : onSuccessUpdateUser
+          ? 'Usuario actualizado correctamente'
+          : ''
+      , 1.2);
       setDrawerVisible(false);
       getUsers();
     }
@@ -164,8 +171,16 @@ const Usuarios = ({
           >
             <Switch
               defaultChecked={record.userActive === 1 ? true : false}
-              onClick={() => {
-                alert(`record.userActive: ${record.userActive}`);
+              onClick={(checked) => {
+                updateUser({
+                  usuario_id: record.usuario_id,
+                  usuario: record.usuario,
+                  nombre: record.nombre,
+                  apellido: record.apellido,
+                  usuario_mail: record.usuario_mail,
+                  usertType: record.usertType,
+                  userActive: checked ? 1 : 0,
+                });
               }}
             />
           </Tooltip>
@@ -230,8 +245,20 @@ const Usuarios = ({
             onOkClick={() => {
               // validar si es edicion o no.
               if (isEditing) {
-                // updateUser(userData);
-                alert('update');
+                const valid = validateForm(
+                  ['usuario', 'nombre', 'apellido', 'usuario_mail', 'userType'],
+                  userData
+                );
+                if (valid) {
+                  let email = userData.email;
+                  // if (validateEmail(email) === false) {
+                  //   message.error('El formato del correo es incorrecto!', 2, 5);
+                  //   return;
+                  // }
+                  updateUser(userData);
+                } else {
+                  message.error('Por favor, complete todos los campos', 2, 5);
+                }
               } else {
                 // primero validar que los datos(campos) obligatorios esten completos.
                 const valid = validateForm(
@@ -441,7 +468,7 @@ const mapDispatchToProps = (dispatch) => ({
   getUsers: () => dispatch(getUsers()),
   getUserProfiles: () => dispatch(getUserProfiles()),
   saveUser: (userData) => dispatch(saveUser(userData)),
-  // updateUser: (user) => dispatch(updateUser(user)),   REVISAR CON ID
+  updateUser: (userData) => dispatch(updateUser(userData)),
   clearUsersList: () => dispatch(clearUsersList()),
 });
 

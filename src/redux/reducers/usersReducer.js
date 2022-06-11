@@ -117,11 +117,11 @@ export const getUsers = (neededPerm) => async (dispatch) => {
 export const updateUser =
   ({
     usuario_id,
-    userName,
-    name,
-    lastName,
+    usuario,
+    nombre,
+    apellido,
     password,
-    email,
+    usuario_mail,
     userType,
     userActive,
     profileId,
@@ -132,14 +132,14 @@ export const updateUser =
     console.log("User update started");
     try {
       const { status } = await api.put(`/users/${usuario_id}`, {
-        userName,
-        name,
-        lastName,
+        usuario,
+        nombre,
+        apellido,
         password,
-        email,
+        usuario_mail,
         userType,
         userActive,
-        profileId,
+        // profileId,
         // usuario_firma,
       });
 
