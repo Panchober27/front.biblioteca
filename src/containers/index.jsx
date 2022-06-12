@@ -4,6 +4,7 @@ export { default as HomePage } from './HomePage';
 export {default as Rankings} from './Rankings';
 export {default as Prestamos} from './PrestamosList';
 export {default as CreateEditPrestamo} from './Prestamos/createEditPrestamo';
+export {default as CEPrestamos} from './Prestamos';
 export {default as Books} from './Libros';
 export {default as Alumnos} from './Alumnos';
 export {default as Usuarios} from './Usuarios';

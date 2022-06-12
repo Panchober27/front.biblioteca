@@ -16,6 +16,7 @@ import {
   HomePage,
   Rankings,
   Prestamos,
+  CEPrestamos,
   CreateEditPrestamo,
   Books,
   Alumnos,
@@ -178,7 +179,9 @@ const Router = ({ users, getUserPermissions }) => {
 
             {/* ruta para crear/editar un prestamo. */}
             <PrivateRoute exact path='/cePrestamo'>
-              <CreateEditPrestamo />
+              {/* <CreateEditPrestamo /> */}
+              <CEPrestamos />
+
             </PrivateRoute>
 
             {/* ruta para mantenedor de libros. */}
