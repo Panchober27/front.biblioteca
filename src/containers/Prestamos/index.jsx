@@ -1,39 +1,44 @@
-import React, { useState } from "react";
-import { Row, Col, Menu, Button, message, Collapse } from "antd";
-import { useHistory } from "react-router-dom";
-import { InputField, SearchableTable } from "../../components/common";
+import React, { useState } from 'react';
+import { Row, Col, Menu, Button, message, Collapse, Tooltip } from 'antd';
+import { useHistory } from 'react-router-dom';
+import { InputField, SearchableTable } from '../../components/common';
 
 const Prestamos = () => {
   const history = useHistory();
   const { SubMenu } = Menu;
   const { Panel } = Collapse;
 
-  // hook de estado: Cual panel esta activo.
-  const [activePanel, setActivePanel] = useState("1");
+  // hook de estado: Cual panel esta activo. // ya no la niito
+  const [activePanel, setActivePanel] = useState('1');
 
   // hook de estado: data del prestamo.
-  const [prestamo, setPrestamo] = React.useState({});
+  const [prestamo, setPrestamo] = React.useState({
+    alumno: {},
+    ejemplares: [],
+  });
 
   // formulario para ingresar datos del alumno.
   // validar, quizas mediante peticion que el alumno este habilitado.
 
   // columnas para la tabla de ejemplares(libros,revistas,trabalajos).
   const ejemplarColumns = [
-    { title: "Titulo", dataIndex: "titulo", key: "titulo" },
-    { title: "Autor", dataIndex: "autor", key: "autor" },
-    { title: "Stock", dataIndex: "stock", key: "stock" },
+    { title: 'Titulo', dataIndex: 'titulo', key: 'titulo' },
+    { title: 'Autor', dataIndex: 'autor', key: 'autor' },
+    { title: 'Stock', dataIndex: 'stock', key: 'stock' },
   ];
 
   // Data de demo para la tabla.
   const ejemplares = [
     {
-      titulo: "Libro 1",
-      autor: "Autor 1 y 2",
+      titulo: 'Libro 1',
+      ejemplarId: 1,
+      autor: 'Autor 1 y 2',
       stock: 5,
     },
     {
-      titulo: "Libro 2",
-      autor: "Autor 2",
+      titulo: 'Libro 2',
+      ejemplarId: 2,
+      autor: 'Autor 2',
       stock: 10,
     },
   ];
@@ -48,58 +53,86 @@ const Prestamos = () => {
             <p>llenar mientras el usuario interactua</p>
             {/* input autocompletable? */}
             <h3>Alumno:</h3>
-            <p> dasdsa </p>
+            <p>
+              {' '}
+              {prestamo && prestamo.alumno && prestamo.alumno.nombres
+                ? prestamo.alumno.nombres
+                : ''}{' '}
+            </p>
             <br />
             <h3>Ejemplares:</h3>
             <ul>
-              <li>Ejemplar 1 / fechas / otros</li>
-              <li>Ejemplar 2 / fechas / otros</li>
-              <li>Ejemplar 3 / fechas / otros</li>
+              {prestamo && prestamo.ejemplares && prestamo.ejemplares.length > 0
+                ? prestamo.ejemplares.map((ejemplar) => (
+                    <li key={ejemplar.ejemplarId}>{ejemplar.titulo}</li>
+                  ))
+                : 'No se han cargonado ejemplares'}
             </ul>
           </div>
           {/* DIV contenedor para las opciones de prestamo. */}
-          <div style={{ display: 'flex', justifyContent: 'right', marginRight: '175px' }}>
-            <Button
-              style={{backgroundColor: 'lightgreen'}}
-              onClick={() => {
-                message.success("Prestamo realizado con exito!");
-              }}
-            >
-              <span>Aceptar</span>
-            </Button>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'right',
+              marginRight: '175px',
+            }}
+          >
+            <Tooltip title='Ver en consola objeto final'>
+              <Button
+                style={{ backgroundColor: 'lightgreen' }}
+                onClick={() => {
+                  message.success('Prestamo realizado con exito!');
+                  console.log(prestamo);
+                }}
+              >
+                <span>Aceptar</span>
+              </Button>
+            </Tooltip>
           </div>
         </Col>
 
         <Col span={12}>
           {/* Alumno */}
-          <Collapse defaultActiveKey={['1', '2']}>
+          {/* <Collapse defaultActiveKey={['1', '2']}> */}
+          <Collapse defaultActiveKey={['0']}>
             <Panel
-              key="1"
+              key='1'
               collapsible='header'
-              className="certification-panel"
+              className='certification-panel'
               header={<h4>Alumno.</h4>}
             >
               <p>Buscador con input select? usar modal de setsDeMasas!!!</p>
-              {/* <SearchableTable
-                columns={ejemplarColumns}
-                dataSource={ejemplares}
-                rowKey="id"
-                onChange={(prestamo) => setPrestamo(prestamo)}
-              /> */}
+              <InputField
+                label='Nombre'
+                name='nombres'
+                placeholder='Nombres'
+                allowClear={true}
+                onChange={(value) => {
+                  setPrestamo({
+                    ...prestamo,
+                    alumno: { ...prestamo.alumno, nombres: value },
+                  });
+                }}
+              />
             </Panel>
             <Panel
-              key="2"
+              key='2'
               collapsible='header'
-              // style={{height: "500px"}}
-              className="certification-panel"
+              // style={{height: '500px'}}
+              className='certification-panel'
               header={<h4>Ejemplares.</h4>}
             >
-              <p>Buscador con input select? usar modal de setsDeMasas!!!</p>
               <SearchableTable
+                rowKey='ejemplarId'
                 columns={ejemplarColumns}
                 dataSource={ejemplares}
-                rowKey="id"
-                onChange={(prestamo) => setPrestamo(prestamo)}
+                onChange={(row) => {
+                  setPrestamo({
+                    ...prestamo,
+                    ejemplares: row,
+                  });
+                }}
+                selectedData={prestamo.ejemplares ? prestamo.ejemplares : []}
               />
             </Panel>
           </Collapse>
@@ -108,5 +141,12 @@ const Prestamos = () => {
     </>
   );
 };
+
+// Reducers.
+// - Ejemplares.
+// - Alumnos.
+// - Prestamos.
+
+//  Al traer alumnos se traeran los prestamos relacionados al alumno.
 
 export default Prestamos;

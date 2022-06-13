@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import Calendario from './Calendario';
 import { Button, Table, Row, Col } from 'antd';
 import {
@@ -11,9 +12,21 @@ import { Tooltip, Modal } from 'antd';
 import withReactContent from 'sweetalert2-react-content';
 import { useHistory } from 'react-router-dom';
 import { VscPreview } from 'react-icons/vsc';
+import { AiOutlineFileDone } from 'react-icons/ai';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import {
+  getPrestamosOfLoggedUser,
+  clearPrestamosState,
+} from '../../redux/reducers/prestamosReducer';
+const HomePage = ({
+  prestamos,
+  getPrestamosOfLoggedUser,
+  clearPrestamosState,
+}) => {
+  // Desestructurando objetos desde reducers.
+  // Quizas mejor no desestructurar, y atacar directamente las propiedades del objeto.
+  // const {} = prestamos;
 
-const HomePage = () => {
   const MySwal = withReactContent(swal);
   const history = useHistory();
 
@@ -22,28 +35,76 @@ const HomePage = () => {
     useState(false);
 
   // hook de estado: Prestamo obtenido desde la tabla.
-  const [prestamo, setPrestamo] = useState({});
+  const [prestamoData, setPrestamoData] = useState({});
+
+  // HOOKS DE EFECTO
+  useEffect(() => {
+    getPrestamosOfLoggedUser();
+  }, []);
+
+  useEffect(() => {
+    if (prestamos.onStartFetch) {
+      MySwal.fire({
+        title: 'Cargando Datos...',
+      });
+      MySwal.showLoading();
+    } else {
+      MySwal.close();
+    }
+  }, [prestamos.onStartFetch]);
+
+  // Hook de efecto final: resetear los datos necesarios.
+  useEffect(() => {
+    return () => {
+      clearPrestamosState();
+    };
+  }, []);
 
   const columns = [
-    { title: 'Codigo', dataIndex: 'codigo', key: 'codigo' },
+    { title: 'Codigo', dataIndex: 'prestamoId', key: 'prestamoId' },
     { title: 'Ejemplares', dataIndex: 'ejemplares', key: 'ejemplares' },
-    { title: 'Alumno', dataIndex: 'alumno', key: 'alumno' },
+    {
+      title: 'Alumno',
+      dataIndex: ['alumno', 'nombreAlumno'],
+      key: 'alumno.nombres',
+    },
     { title: 'Estado', dataIndex: 'estado', key: 'estado' },
     { title: 'Dias atraso', dataIndex: 'diasAtraso', key: 'diasAtraso' },
     {
       title: 'Acciones',
       dataIndex: 'acciones',
       key: 'acciones',
-      render: (text, record) => (
+      render: (row, record, index) => (
         <div className='administration-actions-container'>
           <Tooltip title='Ver detalle'>
-            <button style={{ border: 'none' }}>
+            <button
+              style={{ border: 'none' }}
+              onClick={() => {
+                setPrestamoData(record);
+                setPrestamoDetailsModalVisible(true);
+              }}
+            >
               <VscPreview
                 className='administration-action-icon'
                 style={{ fontSize: '20px', color: '#2B8EFB' }}
+                // onClick={() => {
+                //   // setPrestamoData(record);
+                //   setPrestamoDetailsModalVisible(true);
+                // }}
+              />
+            </button>
+          </Tooltip>
+
+          {/* VALIDAR SI EL PRESTAMO ESTA PARA SER DEVUELTO */}
+
+          <Tooltip title='Realizar Devolución'>
+            <button style={{ border: 'none' }}>
+              <AiOutlineFileDone
+                className='administration-action-icon'
+                style={{ fontSize: '20px', color: '#2B8EFB' }}
                 onClick={() => {
-                  setPrestamo(record);
-                  setPrestamoDetailsModalVisible(true);
+                  // setPrestamoData(record);
+                  // setPrestamoDetailsModalVisible(true);
                 }}
               />
             </button>
@@ -53,16 +114,16 @@ const HomePage = () => {
     },
   ];
 
-  // Funcion para renderizar el modal con el detalle de cada prestamo.
+  // Funcion para renderizar el modal con el detalle de cada prestamoData.
   const renderPrestamoDetails = () => (
     // <CustomModal
     <Modal
-      title='Detalle del prestamo'
+      title='Detalle del prestamoData'
       visible={prestamoDetailsModalVisible}
       width={900}
       destroyOnClose
       onCancel={() => {
-        setPrestamo({});
+        setPrestamoData({});
         setPrestamoDetailsModalVisible(false);
       }}
       footer={
@@ -70,7 +131,7 @@ const HomePage = () => {
           <Button
             type='danger'
             onClick={() => {
-              setPrestamo({});
+              setPrestamoData({});
               setPrestamoDetailsModalVisible(false);
             }}
           >
@@ -82,25 +143,28 @@ const HomePage = () => {
       <Row gutter={16}>
         <Col span={12}>
           <p>
-            <b>Codigo:</b> {prestamo.codigo}
-          </p>
-          {/* <InputField label='Codigo' defaultValue={prestamo.codigo} disabled={true} /> */}
-        </Col>
-        <Col span={12}>
-          <p>
-            <b>Alumno:</b> {prestamo.alumno}
+            <b>Codigo:</b>{' '}
+            {prestamoData.prestamoId ? prestamoData.prestamoId : '----'}
           </p>
         </Col>
         <Col span={12}>
           <p>
-            <b>Estado:</b> {prestamo.estado}
+            <b>Alumno:</b>{' '}
+            {prestamoData.alumno && prestamoData.alumno.nombreAlumno
+              ? prestamoData.alumno.nombreAlumno
+              : '----'}
           </p>
         </Col>
-        {/* si el prestamo tiene dias de atraso se muestra el dato, sino no */}
-        {prestamo.diasAtraso > 0 ? (
+        <Col span={12}>
+          <p>
+            <b>Estado:</b> {prestamoData.estado ? prestamoData.estado : '----'}
+          </p>
+        </Col>
+        {/* si el prestamoData tiene dias de atraso se muestra el dato, sino no */}
+        {prestamoData.diasAtraso > 0 ? (
           <Col span={12}>
             <p>
-              <b>Dias de Atraso:</b> {prestamo.diasAtraso}
+              <b>Dias de Atraso:</b> {prestamoData.diasAtraso}
             </p>
           </Col>
         ) : null}
@@ -170,15 +234,11 @@ const HomePage = () => {
       <div className='container-fluid'>
         <div className='row'>
           <div className='col-12 col-md-6'>
-            Colocar calendario dentro de Scroll
-            <InfiniteScroll dataLength={0}>
-              {/* <Calendario /> */}
-              <ul>
-                <li>Datos del Usuario?</li>
-                <li>Calendario?</li>
-                <li> :( </li>
-              </ul>
-            </InfiniteScroll>
+            <ul>
+              <li>Datos del Usuario?</li>
+              <li>Calendario?</li>
+              <li> :( </li>
+            </ul>
           </div>
           <div className='col-12 col-md-6'>
             <h4>Mis prestamos.</h4>
@@ -186,7 +246,7 @@ const HomePage = () => {
               size='small'
               columns={columns}
               options={prestamosTableOptions}
-              dataSource={data}
+              dataSource={prestamos.data ? [...prestamos.data] : []}
             />
           </div>
         </div>
@@ -200,4 +260,13 @@ const HomePage = () => {
 // - Prestamos filtrados por : prestamos del usuario en sesion y en estados vigentes o atrasados.
 // - Modificar datos del usuario. (restringidos!)
 
-export default HomePage;
+const mapStateToProps = ({ prestamos }) => ({
+  prestamos,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getPrestamosOfLoggedUser: () => dispatch(getPrestamosOfLoggedUser()),
+  clearPrestamosState: () => dispatch(clearPrestamosState()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
