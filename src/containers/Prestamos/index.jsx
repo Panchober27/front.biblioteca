@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { Row, Col, Menu, Button, message, Collapse, Tooltip } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { InputField, SearchableTable } from '../../components/common';
+import swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
 
 const Prestamos = () => {
+  const MySwal = withReactContent(swal);
   const history = useHistory();
   const { SubMenu } = Menu;
   const { Panel } = Collapse;
@@ -81,7 +85,20 @@ const Prestamos = () => {
               <Button
                 style={{ backgroundColor: 'lightgreen' }}
                 onClick={() => {
-                  message.success('Prestamo realizado con exito!');
+                  // usar sweet alert con boton y onClick function
+                  MySwal.fire({
+                    title: 'Objeto final',
+                    text: JSON.stringify(prestamo),
+                    icon: 'info',
+                    confirmButtonText: 'Ok',
+                  }).then((result) => {
+                    if (result.value) {
+                      // Se le envia hacia el home.
+                      history.push('/');
+                      console.log(prestamo);
+                    }
+                  });
+
                   console.log(prestamo);
                 }}
               >
