@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Calendario from './Calendario';
-import { Button, Table, Row, Col } from 'antd';
+import { Button, DatePicker, Row, Col, Tooltip, Modal } from 'antd';
+// importar moment para trabajar con fechas
+import moment from 'moment';
 import {
   AdministrationTable,
   CustomModal,
   InputField,
 } from '../../components/common';
 import swal from 'sweetalert2';
-import { Tooltip, Modal } from 'antd';
 import withReactContent from 'sweetalert2-react-content';
 import { useHistory } from 'react-router-dom';
 import { VscPreview } from 'react-icons/vsc';
@@ -32,6 +33,10 @@ const HomePage = ({
 
   // hook de estado: El modal de detalles es visible o no.
   const [prestamoDetailsModalVisible, setPrestamoDetailsModalVisible] =
+    useState(false);
+
+  // hook de estado: Modal para realizar devolucion de ejemplares.
+  const [devolucionesModalVisible, setDevolucionesModalVisible] =
     useState(false);
 
   // hook de estado: Prestamo obtenido desde la tabla.
@@ -103,8 +108,10 @@ const HomePage = ({
                 className='administration-action-icon'
                 style={{ fontSize: '20px', color: '#2B8EFB' }}
                 onClick={() => {
-                  // setPrestamoData(record);
-                  // setPrestamoDetailsModalVisible(true);
+                  setDevolucionesModalVisible(true);
+                  // TODO: Obtener el prestamo seleccionado.
+                  setPrestamoData(record);
+                  // manipular datos para que el renderizado.
                 }}
               />
             </button>
@@ -168,9 +175,96 @@ const HomePage = ({
             </p>
           </Col>
         ) : null}
+        {prestamoData.usuario ? (
+          <Col span={12}>
+            <p>
+              <b>Usuario Responsable:</b>{' '}
+              {prestamoData.usuario.nombre +
+                ' ' +
+                prestamoData.usuario.apellido}
+            </p>
+          </Col>
+        ) : null}
       </Row>
       {/* </CustomModal> */}
     </Modal>
+  );
+
+  // Funcion que renderiza Modal o Drawer
+  // para reliazar devoluciones de ejemplares asociados al prestamo seleccionado.
+  const renderDevolucionModal = () => (
+    <>
+      <Modal
+        title='Realizar Devolución'
+        visible={devolucionesModalVisible}
+        width={900}
+        destroyOnClose
+        onCancel={() => {
+          setDevolucionesModalVisible(false);
+        }}
+        footer={
+          <div className='administration-modal-footer'>
+            <Button
+              type='danger'
+              onClick={() => {
+                setPrestamoData({});
+                setDevolucionesModalVisible(false);
+              }}
+            >
+              Cerrar
+            </Button>
+          </div>
+        }
+      >
+        <Row gutter={16}>
+          <Col span={12}>
+            <p>
+              <b>Codigo:</b>{' '}
+              {prestamoData.prestamoId ? prestamoData.prestamoId : '----'}
+            </p>
+          </Col>
+          <Col span={12}>
+            <p>
+              <b>Alumno:</b>{' '}
+              {prestamoData.alumno && prestamoData.alumno.nombreAlumno
+                ? prestamoData.alumno.nombreAlumno
+                : '----'}
+            </p>
+          </Col>
+          <Col span={12}>
+            <p>
+              <b>Estado:</b>{' '}
+              {prestamoData.estado ? prestamoData.estado : '----'}
+            </p>
+          </Col>
+          {/* si el prestamoData tiene dias de atraso se muestra el dato, sino no */}
+          {prestamoData.diasAtraso > 0 ? (
+            <Col span={12}>
+              <p>
+                <b>Dias de Atraso:</b> {prestamoData.diasAtraso}
+              </p>
+            </Col>
+          ) : null}
+          {prestamoData.usuario ? (
+            <Col span={12}>
+              <p>
+                <b>Usuario Responsable:</b>{' '}
+                {prestamoData.usuario.nombre +
+                  ' ' +
+                  prestamoData.usuario.apellido}
+              </p>
+            </Col>
+          ) : null}
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <p>
+              <b>Datos de Ejemplares se colocaran en tabla seleccionable para edicion.</b>{' '}
+            </p>
+          </Col>
+        </Row>
+      </Modal>
+    </>
   );
 
   // esto despues sera el listado de prestamos, filtrados por el usuario logeado
@@ -252,6 +346,7 @@ const HomePage = ({
         </div>
       </div>
       {renderPrestamoDetails()}
+      {renderDevolucionModal()}
     </>
   );
 };
