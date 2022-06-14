@@ -6,6 +6,7 @@ import { Button, DatePicker, Row, Col, Tooltip, Modal } from 'antd';
 import moment from 'moment';
 import {
   AdministrationTable,
+  SearchableTable,
   CustomModal,
   InputField,
 } from '../../components/common';
@@ -65,6 +66,8 @@ const HomePage = ({
     };
   }, []);
 
+
+  // Columnas para la tabla con multiples prestamos.🐱‍👤
   const columns = [
     { title: 'Codigo', dataIndex: 'prestamoId', key: 'prestamoId' },
     { title: 'Ejemplares', dataIndex: 'ejemplares', key: 'ejemplares' },
@@ -120,6 +123,22 @@ const HomePage = ({
       ),
     },
   ];
+
+
+  // Columnas para la tabla con ejemplares del prestamo seleccionado para editar (devoluciones)
+
+  const columnsEjemplares = [
+    { title: 'ISBN', dataIndex: '', key: '' },
+
+  // Para renderizar las columnas de los ejemplares de manera correcta,
+  // quizas recorrer y filtrar los ejemplares del prestamo seleccionado.
+  // para poder manipular los datos dentro de la tabla ✌
+    { title: '', dataIndex: '', key: '' },
+    { title: '', dataIndex: '', key: '' },
+  ]
+
+
+
 
   // Funcion para renderizar el modal con el detalle de cada prestamoData.
   const renderPrestamoDetails = () => (
@@ -218,49 +237,35 @@ const HomePage = ({
       >
         <Row gutter={16}>
           <Col span={12}>
-            <p>
-              <b>Codigo:</b>{' '}
-              {prestamoData.prestamoId ? prestamoData.prestamoId : '----'}
-            </p>
+            <SearchableTable
+              columns={columns}
+              dataSource={[]}
+              rowKey='prestamoId'
+              onChange={() => {
+                console.log('cambio');
+              }}
+            />
           </Col>
+
           <Col span={12}>
             <p>
-              <b>Alumno:</b>{' '}
-              {prestamoData.alumno && prestamoData.alumno.nombreAlumno
-                ? prestamoData.alumno.nombreAlumno
-                : '----'}
+              <b>Estado:</b> {prestamoData.estado}
             </p>
-          </Col>
-          <Col span={12}>
+            {prestamoData.usuario ? (
             <p>
-              <b>Estado:</b>{' '}
-              {prestamoData.estado ? prestamoData.estado : '----'}
+              <b>Usuario Responsable:</b>{' '}
+              {prestamoData.usuario.nombre +
+                ' ' +
+                prestamoData.usuario.apellido}
             </p>
-          </Col>
-          {/* si el prestamoData tiene dias de atraso se muestra el dato, sino no */}
-          {prestamoData.diasAtraso > 0 ? (
-            <Col span={12}>
-              <p>
-                <b>Dias de Atraso:</b> {prestamoData.diasAtraso}
-              </p>
-            </Col>
-          ) : null}
-          {prestamoData.usuario ? (
-            <Col span={12}>
-              <p>
-                <b>Usuario Responsable:</b>{' '}
-                {prestamoData.usuario.nombre +
-                  ' ' +
-                  prestamoData.usuario.apellido}
-              </p>
-            </Col>
-          ) : null}
-        </Row>
-        <Row gutter={16}>
-          <Col span={12}>
+            ) : null}
+
+            {prestamoData.alumno ? (
             <p>
-              <b>Datos de Ejemplares se colocaran en tabla seleccionable para edicion.</b>{' '}
+              <b>Alumno:</b> {`${prestamoData.alumno.nombreAlumno} ${prestamoData.alumno.apellidoAlumno}`}
             </p>
+            ) : null}
+
           </Col>
         </Row>
       </Modal>
