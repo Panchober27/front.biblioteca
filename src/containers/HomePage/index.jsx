@@ -43,6 +43,10 @@ const HomePage = ({
   // hook de estado: Prestamo obtenido desde la tabla.
   const [prestamoData, setPrestamoData] = useState({});
 
+  // Hook de estado para arreglo de ejemplares que se les realizara una devolucion.
+  // caso de uso: alumno retorna 2 libros de un prestamo, usuario selecciona esos libros y se guardan en este hook.
+  const [selectedEjemplares, setSelectedEjemeplares] = useState([{}]);
+
   // HOOKS DE EFECTO
   useEffect(() => {
     getPrestamosOfLoggedUser();
@@ -66,7 +70,6 @@ const HomePage = ({
     };
   }, []);
 
-
   // Columnas para la tabla con multiples prestamos.🐱‍👤
   const columns = [
     { title: 'Codigo', dataIndex: 'prestamoId', key: 'prestamoId' },
@@ -74,7 +77,7 @@ const HomePage = ({
     {
       title: 'Alumno',
       dataIndex: ['alumno', 'nombreAlumno'],
-      key: 'alumno.nombres',  
+      key: 'alumno.nombres',
     },
     { title: 'Estado', dataIndex: 'estado', key: 'estado' },
     { title: 'Dias atraso', dataIndex: 'diasAtraso', key: 'diasAtraso' },
@@ -124,27 +127,30 @@ const HomePage = ({
     },
   ];
 
-
   // Columnas para la tabla con ejemplares del prestamo seleccionado para editar (devoluciones)
   const ejemplaresCols = [
-    { 
+    {
       title: 'ISBN',
       dataIndex: ['ejemplar', 'isbn'],
-      key: 'isbn'
+      key: 'isbn',
     },
-    { 
+    {
       title: 'Titulo',
       render: (row, record, index) => (
         <div>
-          {record.ejemplar.libro.nombre ? record.ejemplar.libro.nombre : 'no hay' }
+          {record.ejemplar.libro.nombre
+            ? record.ejemplar.libro.nombre
+            : 'no hay'}
         </div>
-      )
+      ),
     },
     {
       title: 'Fecha Inicio',
       render: (row, record, index) => (
         <div>
-          {record.ejemplar.fechaEntrga ? record.ejemplar.fechaEntrga : 'no hay fecha'}
+          {record.ejemplar.fechaEntrega
+            ? record.ejemplar.fechaEntrega
+            : 'no hay fecha'}
         </div>
       ),
     },
@@ -152,12 +158,13 @@ const HomePage = ({
       title: 'Fecha Fin',
       render: (row, record, index) => (
         <div>
-          {record.ejemplar.fechaFin ? record.ejemplar.fechaFin : 'no hay fecha!'}
+          {record.ejemplar.fechaFin
+            ? record.ejemplar.fechaFin
+            : 'no hay fecha!'}
         </div>
       ),
     },
   ];
-
 
   // Funcion para renderizar el modal con el detalle de cada prestamoData.
   const renderPrestamoDetails = () => (
@@ -251,53 +258,110 @@ const HomePage = ({
             >
               Cerrar
             </Button>
+            <Button
+              type='primary'
+              onClick={() => {
+                // alert('new button');
+                MySwal.fire({
+                  title: 'Actualizar Prestamo',
+                  text: 'Crear validacion, en caso de que e entreguen todos o el ultimo ejemplar!🐱‍👤',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Si, realizar devolución!',
+                  cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                  if (result.value) {
+                    // TODO: Realizar devoluciones de ejemplares.
+                    // usar contador de array de ejemplares???
+                    // cuando el contador llegue a 0, se termina el prestamo🐱‍👤.
+                  }
+                });
+              }}
+            >
+              Guardar Cambios
+            </Button>
           </div>
         }
       >
         <button
-        onClick={() => {
-          console.log(prestamoData);
-        }}
-      >
-        Ver Prestamos Data.
-      </button>
+          onClick={() => {
+            console.log(prestamoData);
+          }}
+        >
+          Ver Prestamos Data.
+        </button>
         <Row gutter={16}>
           <Col span={12}>
-
             <SearchableTable
               columns={ejemplaresCols}
-              dataSource={prestamoData.prestamoEjemplars ? [...prestamoData.prestamoEjemplars] : []}
+              dataSource={
+                prestamoData.prestamoEjemplars
+                  ? [...prestamoData.prestamoEjemplars]
+                  : []
+              }
               rowKey='prestamoId'
-              onChange={() => {
-                console.log('cambio');
+              onChange={(row) => {
+                setSelectedEjemeplares(row);
               }}
             />
+            <p>Ejemplares a devolver:</p>
 
-
-
+            {selectedEjemplares && selectedEjemplares.length > 0 ? (
+              <ul>
+                {selectedEjemplares.map((ejemplar) => (
+                  <li key={ejemplar.ejemplarId}>
+                    {ejemplar.ejemplarId} -
+                    {ejemplar.ejemplar && ejemplar.ejemplar.libro ? (
+                      <>
+                        {ejemplar.ejemplar.libro.nombre}
+                      </>
+                    ) : ejemplar.ejemplar && ejemplar.ejemplar.revista ? (
+                      <>
+                        {ejemplar.ejemplar.revista.nombre}
+                      </>
+                    ) : ejemplar.ejemplar && ejemplar.ejemplar.trabajo ? (
+                      <>
+                        {ejemplar.ejemplar.trabajo.nombre}
+                      </>
+                    ) : null}
+                    {/* TODO:
+                        Armar vista de los ejemplares que se estan
+                        guardando para ser devueltos.
+                     */}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No hay ejemplares seleccionados</p>
+            )}
           </Col>
           <Col span={12}>
             <p>
               <b>Estado:</b> {prestamoData.estado}
             </p>
             {prestamoData.usuario ? (
-            <p>
-              <b>Usuario Responsable:</b>{' '}
-              {prestamoData.usuario.nombre +
-                ' ' +
-                prestamoData.usuario.apellido}
-            </p>
+              <p>
+                <b>Usuario Responsable:</b>{' '}
+                {prestamoData.usuario.nombre +
+                  ' ' +
+                  prestamoData.usuario.apellido}
+              </p>
             ) : null}
             {prestamoData.alumno ? (
-            <p>
-              <b>Alumno:</b> {`${prestamoData.alumno.nombreAlumno} ${prestamoData.alumno.apellidoAlumno}`}
-            </p>
+              <p>
+                <b>Alumno:</b>{' '}
+                {`${prestamoData.alumno.nombreAlumno} ${prestamoData.alumno.apellidoAlumno}`}
+              </p>
             ) : null}
             <p>
-              <b>Fecha Inicio:</b>{prestamoData.fechaInicio}
+              <b>Fecha Inicio:</b>
+              {prestamoData.fechaInicio}
             </p>
             <p>
-              <b>Fecha Fin:</b>{prestamoData.fechaFin}
+              <b>Fecha Fin:</b>
+              {prestamoData.fechaFin}
             </p>
           </Col>
         </Row>
