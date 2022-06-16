@@ -74,7 +74,7 @@ const HomePage = ({
     {
       title: 'Alumno',
       dataIndex: ['alumno', 'nombreAlumno'],
-      key: 'alumno.nombres',
+      key: 'alumno.nombres',  
     },
     { title: 'Estado', dataIndex: 'estado', key: 'estado' },
     { title: 'Dias atraso', dataIndex: 'diasAtraso', key: 'diasAtraso' },
@@ -126,18 +126,37 @@ const HomePage = ({
 
 
   // Columnas para la tabla con ejemplares del prestamo seleccionado para editar (devoluciones)
-
-  const columnsEjemplares = [
-    { title: 'ISBN', dataIndex: '', key: '' },
-
-  // Para renderizar las columnas de los ejemplares de manera correcta,
-  // quizas recorrer y filtrar los ejemplares del prestamo seleccionado.
-  // para poder manipular los datos dentro de la tabla ✌
-    { title: '', dataIndex: '', key: '' },
-    { title: '', dataIndex: '', key: '' },
-  ]
-
-
+  const ejemplaresCols = [
+    { 
+      title: 'ISBN',
+      dataIndex: ['ejemplar', 'isbn'],
+      key: 'isbn'
+    },
+    { 
+      title: 'Titulo',
+      render: (row, record, index) => (
+        <div>
+          {record.ejemplar.libro.nombre ? record.ejemplar.libro.nombre : 'no hay' }
+        </div>
+      )
+    },
+    {
+      title: 'Fecha Inicio',
+      render: (row, record, index) => (
+        <div>
+          {record.ejemplar.fechaEntrga ? record.ejemplar.fechaEntrga : 'no hay fecha'}
+        </div>
+      ),
+    },
+    {
+      title: 'Fecha Fin',
+      render: (row, record, index) => (
+        <div>
+          {record.ejemplar.fechaFin ? record.ejemplar.fechaFin : 'no hay fecha!'}
+        </div>
+      ),
+    },
+  ];
 
 
   // Funcion para renderizar el modal con el detalle de cada prestamoData.
@@ -235,18 +254,28 @@ const HomePage = ({
           </div>
         }
       >
+        <button
+        onClick={() => {
+          console.log(prestamoData);
+        }}
+      >
+        Ver Prestamos Data.
+      </button>
         <Row gutter={16}>
           <Col span={12}>
+
             <SearchableTable
-              columns={columns}
-              dataSource={[]}
+              columns={ejemplaresCols}
+              dataSource={prestamoData.prestamoEjemplars ? [...prestamoData.prestamoEjemplars] : []}
               rowKey='prestamoId'
               onChange={() => {
                 console.log('cambio');
               }}
             />
-          </Col>
 
+
+
+          </Col>
           <Col span={12}>
             <p>
               <b>Estado:</b> {prestamoData.estado}
@@ -259,13 +288,17 @@ const HomePage = ({
                 prestamoData.usuario.apellido}
             </p>
             ) : null}
-
             {prestamoData.alumno ? (
             <p>
               <b>Alumno:</b> {`${prestamoData.alumno.nombreAlumno} ${prestamoData.alumno.apellidoAlumno}`}
             </p>
             ) : null}
-
+            <p>
+              <b>Fecha Inicio:</b>{prestamoData.fechaInicio}
+            </p>
+            <p>
+              <b>Fecha Fin:</b>{prestamoData.fechaFin}
+            </p>
           </Col>
         </Row>
       </Modal>

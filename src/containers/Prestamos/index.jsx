@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Row, Col, Menu, Button, message, Collapse, Tooltip } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { InputField, SearchableTable } from '../../components/common';
@@ -16,7 +16,7 @@ const Prestamos = () => {
   const [activePanel, setActivePanel] = useState('1');
 
   // hook de estado: data del prestamo.
-  const [prestamo, setPrestamo] = React.useState({
+  const [prestamo, setPrestamo] = useState({
     alumno: {},
     ejemplares: [],
   });

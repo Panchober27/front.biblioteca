@@ -1,0 +1,3 @@
+crear hook de estado para listado de ejemplares, de manera que sean trabajables?
+
+o trabajarlos como directamenete como vienen del servidor?
