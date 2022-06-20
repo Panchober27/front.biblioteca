@@ -5,7 +5,7 @@ import TopbarNavLink from './TopbarNavLink';
 const TopNavPrestamos = () => {
     return (
         <>
-            <TopbarNavLink title='Libros' route='/books' />
+            <TopbarNavLink title='Ejemplares' route='/books' />
         </>
     );
 }

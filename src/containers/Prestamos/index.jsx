@@ -1,12 +1,20 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Menu, Button, message, Collapse, Tooltip } from 'antd';
+import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { InputField, SearchableTable } from '../../components/common';
+import {
+  InputField,
+  SearchableTable,
+  SearchInput,
+} from '../../components/common';
 import swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import {
+  getAlumnos,
+  clearAlumnosState,
+} from '../../redux/reducers/alumnosReducer';
 
-
-const Prestamos = () => {
+const Prestamos = ({ alumnos, getAlumnos, clearAlumnosState }) => {
   const MySwal = withReactContent(swal);
   const history = useHistory();
   const { SubMenu } = Menu;
@@ -16,13 +24,45 @@ const Prestamos = () => {
   const [activePanel, setActivePanel] = useState('1');
 
   // hook de estado: data del prestamo.
-  const [prestamo, setPrestamo] = useState({
-    alumno: {},
-    ejemplares: [],
-  });
+
+  // Separo la data para prestamoData.
+  const [prestamoData, setPrestamoData] = useState({});
+  const [alumno, setAlumno] = useState([]);
+  const [ejemplares, setEjemplares] = useState([]);
+
+  // hook de efecto inicial.
+  useEffect(() => {
+    getAlumnos();
+  }, []);
+
+  // hook de efecto final.
+  useEffect(() => {
+    return () => {
+      clearAlumnosState();
+    };
+  }, []);
 
   // formulario para ingresar datos del alumno.
   // validar, quizas mediante peticion que el alumno este habilitado.
+
+  // columnas para la tabla de alumnos (selector de alumno para prestamos)
+  const alumnosColumns = [
+    {
+      title: 'Nombre',
+      dataIndex: 'nombreAlumno',
+      key: 'nombreAlumno',
+    },
+    {
+      title: 'Rut',
+      dataIndex: 'rutAlumno',
+      key: 'rutAlumno',
+    },
+    {
+      title: 'Correo',
+      dataIndex: 'emailAlumno',
+      key: 'emailAlumno',
+    },
+  ];
 
   // columnas para la tabla de ejemplares(libros,revistas,trabalajos).
   const ejemplarColumns = [
@@ -32,23 +72,31 @@ const Prestamos = () => {
   ];
 
   // Data de demo para la tabla.
-  const ejemplares = [
-    {
-      titulo: 'Libro 1',
-      ejemplarId: 1,
-      autor: 'Autor 1 y 2',
-      stock: 5,
-    },
-    {
-      titulo: 'Libro 2',
-      ejemplarId: 2,
-      autor: 'Autor 2',
-      stock: 10,
-    },
-  ];
+  // const ejemplares = [
+  //   {
+  //     titulo: 'Libro 1',
+  //     ejemplarId: 1,
+  //     autor: 'Autor 1 y 2',
+  //     stock: 5,
+  //   },
+  //   {
+  //     titulo: 'Libro 2',
+  //     ejemplarId: 2,
+  //     autor: 'Autor 2',
+  //     stock: 10,
+  //   },
+  // ];
 
   return (
     <>
+      <button
+        onClick={() => {
+          console.log(prestamoData);
+        }}
+      >
+        Ver prestamoData
+      </button>
+
       <Row>
         <Col span={12}>
           {/* DIV contenedor de los datos de preview */}
@@ -58,20 +106,29 @@ const Prestamos = () => {
             {/* input autocompletable? */}
             <h3>Alumno:</h3>
             <p>
-              {' '}
-              {prestamo && prestamo.alumno && prestamo.alumno.nombres
-                ? prestamo.alumno.nombres
-                : ''}{' '}
+              {alumno.length ? (
+                <>
+                  {alumno[0].nombreAlumno}
+                  <br />
+                  {alumno[0].rutAlumno}
+                  <br />
+                  {alumno[0].emailAlumno}
+                </>
+              ) : (
+                <>
+                  <span>Seleccione un alumno</span>
+                </>
+              )}
             </p>
             <br />
             <h3>Ejemplares:</h3>
-            <ul>
+            {/* <ul>
               {prestamo && prestamo.ejemplares && prestamo.ejemplares.length > 0
                 ? prestamo.ejemplares.map((ejemplar) => (
                     <li key={ejemplar.ejemplarId}>{ejemplar.titulo}</li>
                   ))
                 : 'No se han cargonado ejemplares'}
-            </ul>
+            </ul> */}
           </div>
           {/* DIV contenedor para las opciones de prestamo. */}
           <div
@@ -85,21 +142,27 @@ const Prestamos = () => {
               <Button
                 style={{ backgroundColor: 'lightgreen' }}
                 onClick={() => {
+                  setPrestamoData({
+                    ...prestamoData,
+                    alumno: alumno,
+                    ejemplares: ejemplares,
+                  });
+
                   // usar sweet alert con boton y onClick function
                   MySwal.fire({
                     title: 'Objeto final',
-                    text: JSON.stringify(prestamo),
+                    text: JSON.stringify(prestamoData),
                     icon: 'info',
                     confirmButtonText: 'Ok',
                   }).then((result) => {
                     if (result.value) {
                       // Se le envia hacia el home.
                       history.push('/');
-                      console.log(prestamo);
+                      console.log(prestamoData);
                     }
                   });
 
-                  console.log(prestamo);
+                  console.log(prestamoData);
                 }}
               >
                 <span>Aceptar</span>
@@ -118,24 +181,23 @@ const Prestamos = () => {
               className='certification-panel'
               header={<h4>Alumno.</h4>}
             >
-              <p>Buscador con input select? usar modal de setsDeMasas!!!</p>
-              <InputField
-                label='Nombre'
-                name='nombres'
-                placeholder='Nombres'
-                allowClear={true}
+              <SearchableTable
+                columns={alumnosColumns}
+                rowKey='rutAlumno'
+                dataSource={alumnos.data ? [...alumnos.data] : []}
                 onChange={(value) => {
-                  setPrestamo({
-                    ...prestamo,
-                    alumno: { ...prestamo.alumno, nombres: value },
-                  });
+                  setAlumno(value);
+                  console.log(alumno);
                 }}
+                selectedData={alumno}
+                maxSelection={1}
+                maxSelecctionMessage='Solo puede seleccionar un alumno.'
+                emptyMessage='No hay alumnos para mostrar.'
               />
             </Panel>
             <Panel
               key='2'
               collapsible='header'
-              // style={{height: '500px'}}
               className='certification-panel'
               header={<h4>Ejemplares.</h4>}
             >
@@ -143,13 +205,8 @@ const Prestamos = () => {
                 rowKey='ejemplarId'
                 columns={ejemplarColumns}
                 dataSource={ejemplares}
-                onChange={(row) => {
-                  setPrestamo({
-                    ...prestamo,
-                    ejemplares: row,
-                  });
-                }}
-                selectedData={prestamo.ejemplares ? prestamo.ejemplares : []}
+                onChange={(row) => {}}
+                selectedData={[]}
               />
             </Panel>
           </Collapse>
@@ -166,4 +223,13 @@ const Prestamos = () => {
 
 //  Al traer alumnos se traeran los prestamos relacionados al alumno.
 
-export default Prestamos;
+const mapStateToProps = ({ alumnos }) => ({
+  alumnos,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getAlumnos: () => dispatch(getAlumnos()),
+  clearAlumnosState: () => dispatch(clearAlumnosState()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Prestamos);

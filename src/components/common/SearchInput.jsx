@@ -9,7 +9,7 @@ import { Input, AutoComplete } from 'antd';
  * @param {callback} param0.onSelect
  * @param {boolean} param0.disabled
  * @param {object[]} param0.values
- * @param {'DEFAULT' | 'CLIENT' | 'CLIENTS_LOCATION' | 'ACTIVES'} param0.type
+ * @param {'DEFAULT' | 'ALUMNOS' | 'CLIENT' | 'CLIENTS_LOCATION' | 'ACTIVES'} param0.type
  * @returns
  */
 const SearchInput = ({
@@ -44,6 +44,9 @@ const SearchInput = ({
         } else if (type === 'ACTIVES') {
           value = val.activo_id;
           label = val.activo_tipo_equipo;
+        } else if(type === 'ALUMNOS') {
+          value = val.alumno_id;
+          label = `${val.alumno_nombres} (${val.alumno_rut})`;
         } else {
           label = val.label;
           value = val.value;

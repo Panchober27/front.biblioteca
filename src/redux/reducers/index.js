@@ -7,3 +7,5 @@ export { default as auth } from './authReducer';
 export { default as users } from './usersReducer';
 export { default as permissions } from './permissionsReducer';
 export { default as prestamos } from './prestamosReducer';
+export { default as ejemplares } from './ejemplaresReducer';
+export { default as alumnos } from './alumnosReducer';
