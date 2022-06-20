@@ -13,18 +13,25 @@ import {
   getAlumnos,
   clearAlumnosState,
 } from '../../redux/reducers/alumnosReducer';
+import {
+  getEjemplares,
+  clearEjemplaresState,
+} from '../../redux/reducers/ejemplaresReducer';
 
-const Prestamos = ({ alumnos, getAlumnos, clearAlumnosState }) => {
+const Prestamos = ({
+  alumnos,
+  getAlumnos,
+  clearAlumnosState,
+  ejemplaresReducer,
+  getEjemplares,
+  clearEjemplaresState,
+}) => {
   const MySwal = withReactContent(swal);
   const history = useHistory();
   const { SubMenu } = Menu;
   const { Panel } = Collapse;
 
-  // hook de estado: Cual panel esta activo. // ya no la niito
-  const [activePanel, setActivePanel] = useState('1');
-
   // hook de estado: data del prestamo.
-
   // Separo la data para prestamoData.
   const [prestamoData, setPrestamoData] = useState({});
   const [alumno, setAlumno] = useState([]);
@@ -33,12 +40,41 @@ const Prestamos = ({ alumnos, getAlumnos, clearAlumnosState }) => {
   // hook de efecto inicial.
   useEffect(() => {
     getAlumnos();
+    getEjemplares();
   }, []);
+
+  // podria hacer un useEffect para ervisar si hay cambios en alumno y/o ejemplares para setearlos a prestamoData.
+  useEffect(() => {
+    if (alumno.length > 0) {
+      // setear el primer alumno del arreglo OJO que se pasa el indice, para solo tener un {} y no []
+      setPrestamoData({
+        ...prestamoData,
+        alumno: alumno[0],
+      });
+    } else if (!alumno.length) {
+      setPrestamoData({
+        ...prestamoData,
+        alumno: {},
+      });
+    }
+  }, [alumno]);
+
+  useEffect(() => {
+    if (ejemplares.length > 0) {
+      setPrestamoData({ ...prestamoData, ejemplares });
+    } else if (!ejemplares.length) {
+      setPrestamoData({ ...prestamoData, ejemplares: [] });
+    }
+  }, [ejemplares]);
 
   // hook de efecto final.
   useEffect(() => {
     return () => {
+      setAlumno([]);
+      setEjemplares([]);
+      setPrestamoData({});
       clearAlumnosState();
+      clearEjemplaresState();
     };
   }, []);
 
@@ -67,25 +103,9 @@ const Prestamos = ({ alumnos, getAlumnos, clearAlumnosState }) => {
   // columnas para la tabla de ejemplares(libros,revistas,trabalajos).
   const ejemplarColumns = [
     { title: 'Titulo', dataIndex: 'titulo', key: 'titulo' },
-    { title: 'Autor', dataIndex: 'autor', key: 'autor' },
-    { title: 'Stock', dataIndex: 'stock', key: 'stock' },
+    { title: 'ISBN', dataIndex: 'isbn', key: 'isbn' },
+    { title: 'Fecha Fin', dataIndex: 'fechaFin', key: 'fechaFin' },
   ];
-
-  // Data de demo para la tabla.
-  // const ejemplares = [
-  //   {
-  //     titulo: 'Libro 1',
-  //     ejemplarId: 1,
-  //     autor: 'Autor 1 y 2',
-  //     stock: 5,
-  //   },
-  //   {
-  //     titulo: 'Libro 2',
-  //     ejemplarId: 2,
-  //     autor: 'Autor 2',
-  //     stock: 10,
-  //   },
-  // ];
 
   return (
     <>
@@ -122,13 +142,15 @@ const Prestamos = ({ alumnos, getAlumnos, clearAlumnosState }) => {
             </p>
             <br />
             <h3>Ejemplares:</h3>
-            {/* <ul>
-              {prestamo && prestamo.ejemplares && prestamo.ejemplares.length > 0
-                ? prestamo.ejemplares.map((ejemplar) => (
-                    <li key={ejemplar.ejemplarId}>{ejemplar.titulo}</li>
-                  ))
-                : 'No se han cargonado ejemplares'}
-            </ul> */}
+            <ul>
+              {ejemplares.length ? (
+                ejemplares.map((ejemplar) => (
+                  <li key={ejemplar.ejemplarId}>{ejemplar.ejemplarId}</li>
+                ))
+              ) : (
+                <li>Seleccione un ejemplar</li>
+              )}
+            </ul>
           </div>
           {/* DIV contenedor para las opciones de prestamo. */}
           <div
@@ -204,9 +226,14 @@ const Prestamos = ({ alumnos, getAlumnos, clearAlumnosState }) => {
               <SearchableTable
                 rowKey='ejemplarId'
                 columns={ejemplarColumns}
-                dataSource={ejemplares}
-                onChange={(row) => {}}
-                selectedData={[]}
+                dataSource={
+                  ejemplaresReducer.data ? [...ejemplaresReducer.data] : []
+                }
+                onChange={(value) => {
+                  setEjemplares(value);
+                  console.log(ejemplares);
+                }}
+                selectedData={ejemplares}
               />
             </Panel>
           </Collapse>
@@ -223,13 +250,16 @@ const Prestamos = ({ alumnos, getAlumnos, clearAlumnosState }) => {
 
 //  Al traer alumnos se traeran los prestamos relacionados al alumno.
 
-const mapStateToProps = ({ alumnos }) => ({
+const mapStateToProps = ({ alumnos, ejemplaresReducer }) => ({
   alumnos,
+  ejemplaresReducer,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getAlumnos: () => dispatch(getAlumnos()),
   clearAlumnosState: () => dispatch(clearAlumnosState()),
+  getEjemplares: () => dispatch(getEjemplares()),
+  clearEjemplaresState: () => dispatch(clearEjemplaresState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Prestamos);
