@@ -3,9 +3,7 @@ import { Row, Col, Menu, Button, message, Collapse, Tooltip } from 'antd';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
-  InputField,
   SearchableTable,
-  SearchInput,
 } from '../../components/common';
 import swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -17,8 +15,16 @@ import {
   getEjemplares,
   clearEjemplaresState,
 } from '../../redux/reducers/ejemplaresReducer';
+import {
+  createPrestamo,
+  clearPrestamosState,
+  clearPrestamoV2State,
+} from '../../redux/reducers/prestamosReducer';
 
 const Prestamos = ({
+  prestamos,
+  createPrestamo,
+  clearPrestamosState,
   alumnos,
   getAlumnos,
   clearAlumnosState,
@@ -67,7 +73,37 @@ const Prestamos = ({
     }
   }, [ejemplares]);
 
-  // hook de efecto final.
+  // Hooks de Efecto para peticion para crear un prestamo.
+  useEffect(() => {
+    if (prestamos.onSuccessPostPutFetch) {
+      MySwal.fire({
+        title: 'Prestamo creado',
+        text: 'El prestamo se creo correctamente',
+        icon: 'success',
+        confirmButtonText: 'Ok',
+      });
+      clearPrestamosState();
+      clearPrestamoV2State();
+      history.push('/prestamos');
+    } else if (prestamos.onStartFetch){
+      MySwal.fire({
+        title: 'Creando Prestamo',
+        icon: 'success',
+      });
+      MySwal.showLoading();
+
+    } else if (prestamos.onErrorFetch) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'El prestamo no se pudo crear',
+        icon: 'error',
+        confirmButtonText: 'Ok',
+      });
+      clearPrestamosState();
+      clearPrestamoV2State();
+    }
+  }, [prestamos]);
+
   useEffect(() => {
     return () => {
       setAlumno([]);
@@ -75,6 +111,8 @@ const Prestamos = ({
       setPrestamoData({});
       clearAlumnosState();
       clearEjemplaresState();
+      clearPrestamosState();
+      clearPrestamoV2State();
     };
   }, []);
 
@@ -145,7 +183,23 @@ const Prestamos = ({
             <ul>
               {ejemplares.length ? (
                 ejemplares.map((ejemplar) => (
-                  <li key={ejemplar.ejemplarId}>{ejemplar.ejemplarId}</li>
+                  <li key={ejemplar.ejemplarId}>
+                    <p>
+                      {ejemplar.libro ? (
+                        <>
+                          <p>{ejemplar.isbn}</p>
+                          <p>{ejemplar.libro.nombre}</p>
+                          <p>Colocar mas datos del libro??</p>
+                          <p>{/* {ejemplar.libro.nombre} */}</p>
+                          <p>{/* {ejemplar.libro.nombre} */}</p>
+                        </>
+                      ) : ejemplar.revista ? (
+                        ejemplar.revista.nombre
+                      ) : ejemplar.trabajo ? (
+                        ejemplar.trabajo.titulo
+                      ) : null}
+                    </p>
+                  </li>
                 ))
               ) : (
                 <li>Seleccione un ejemplar</li>
@@ -170,20 +224,20 @@ const Prestamos = ({
                     ejemplares: ejemplares,
                   });
 
-                  // usar sweet alert con boton y onClick function
                   MySwal.fire({
-                    title: 'Objeto final',
-                    text: JSON.stringify(prestamoData),
-                    icon: 'info',
-                    confirmButtonText: 'Ok',
+                    title: 'Desea guardar el prestamo?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: 'Guardar Prestamo',
+                    denyButtonText: `Cancelar`,
                   }).then((result) => {
-                    if (result.value) {
-                      // Se le envia hacia el home.
-                      history.push('/');
-                      console.log(prestamoData);
+                    if (result.isConfirmed) {
+                      createPrestamo(prestamoData);
                     }
+                    // else if (result.isDenied) {
+                    //   MySwal.fire('Cancelado', '', 'info')
+                    // }
                   });
-
                   console.log(prestamoData);
                 }}
               >
@@ -194,8 +248,6 @@ const Prestamos = ({
         </Col>
 
         <Col span={12}>
-          {/* Alumno */}
-          {/* <Collapse defaultActiveKey={['1', '2']}> */}
           <Collapse defaultActiveKey={['0']}>
             <Panel
               key='1'
@@ -250,9 +302,10 @@ const Prestamos = ({
 
 //  Al traer alumnos se traeran los prestamos relacionados al alumno.
 
-const mapStateToProps = ({ alumnos, ejemplaresReducer }) => ({
+const mapStateToProps = ({ alumnos, ejemplaresReducer, prestamos }) => ({
   alumnos,
   ejemplaresReducer,
+  prestamos,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -260,6 +313,9 @@ const mapDispatchToProps = (dispatch) => ({
   clearAlumnosState: () => dispatch(clearAlumnosState()),
   getEjemplares: () => dispatch(getEjemplares()),
   clearEjemplaresState: () => dispatch(clearEjemplaresState()),
+  createPrestamo: (body) => dispatch(createPrestamo(body)),
+  clearPrestamosState: () => dispatch(clearPrestamosState()),
+  clearPrestamoV2State: () => dispatch(clearPrestamoV2State()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Prestamos);

@@ -12,6 +12,17 @@ export const getPrestamosOfLoggedUser = () =>
     errorMessage: "Error al cargar prestamos",
   });
 
+// funcion de reducer con post y pasar data en el body.
+const reducerV2 = fetchReducer("prestamos");
+
+export const createPrestamo = (body) =>
+  reducerV2.post({
+    body,
+    loadingMessage: "Cargando prestamo...",
+    errorMessage: "Error al cargar prestamo",
+  });
+
 export const clearPrestamosState = () => reducer.clearState();
+export const clearPrestamoV2State = () => reducerV2.clearState();
 
 export default reducer.reducer;
