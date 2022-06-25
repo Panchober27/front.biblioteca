@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Menu, Button, message, Collapse, Tooltip } from 'antd';
-import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import {
-  SearchableTable,
-} from '../../components/common';
-import swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+import React, { useState, useEffect } from "react";
+import { Row, Col, Menu, Button, message, Collapse, Tooltip } from "antd";
+import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { SearchableTable } from "../../components/common";
+import swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import {
   getAlumnos,
   clearAlumnosState,
-} from '../../redux/reducers/alumnosReducer';
+} from "../../redux/reducers/alumnosReducer";
 import {
   getEjemplares,
   clearEjemplaresState,
-} from '../../redux/reducers/ejemplaresReducer';
+} from "../../redux/reducers/ejemplaresReducer";
 import {
   createPrestamo,
   clearPrestamosState,
   clearPrestamoV2State,
-} from '../../redux/reducers/prestamosReducer';
+} from "../../redux/reducers/prestamosReducer";
 
 const Prestamos = ({
   prestamos,
@@ -77,27 +75,26 @@ const Prestamos = ({
   useEffect(() => {
     if (prestamos.onSuccessPostPutFetch) {
       MySwal.fire({
-        title: 'Prestamo creado',
-        text: 'El prestamo se creo correctamente',
-        icon: 'success',
-        confirmButtonText: 'Ok',
+        title: "Prestamo creado",
+        text: "El prestamo se creo correctamente",
+        icon: "success",
+        confirmButtonText: "Ok",
       });
       clearPrestamosState();
       clearPrestamoV2State();
-      history.push('/prestamos');
-    } else if (prestamos.onStartFetch){
+      history.push("/prestamos");
+    } else if (prestamos.onStartFetch) {
       MySwal.fire({
-        title: 'Creando Prestamo',
-        icon: 'success',
+        title: "Creando Prestamo",
+        icon: "success",
       });
       MySwal.showLoading();
-
     } else if (prestamos.onErrorFetch) {
       MySwal.fire({
-        title: 'Error',
-        text: 'El prestamo no se pudo crear',
-        icon: 'error',
-        confirmButtonText: 'Ok',
+        title: "Error",
+        text: "El prestamo no se pudo crear",
+        icon: "error",
+        confirmButtonText: "Ok",
       });
       clearPrestamosState();
       clearPrestamoV2State();
@@ -122,27 +119,38 @@ const Prestamos = ({
   // columnas para la tabla de alumnos (selector de alumno para prestamos)
   const alumnosColumns = [
     {
-      title: 'Nombre',
-      dataIndex: 'nombreAlumno',
-      key: 'nombreAlumno',
+      title: "Nombre",
+      dataIndex: "nombreAlumno",
+      key: "nombreAlumno",
     },
     {
-      title: 'Rut',
-      dataIndex: 'rutAlumno',
-      key: 'rutAlumno',
+      title: "Rut",
+      dataIndex: "rutAlumno",
+      key: "rutAlumno",
     },
     {
-      title: 'Correo',
-      dataIndex: 'emailAlumno',
-      key: 'emailAlumno',
+      title: "Correo",
+      dataIndex: "emailAlumno",
+      key: "emailAlumno",
     },
   ];
 
   // columnas para la tabla de ejemplares(libros,revistas,trabalajos).
   const ejemplarColumns = [
-    { title: 'Titulo', dataIndex: 'titulo', key: 'titulo' },
-    { title: 'ISBN', dataIndex: 'isbn', key: 'isbn' },
-    { title: 'Fecha Fin', dataIndex: 'fechaFin', key: 'fechaFin' },
+    { title: "Titulo", dataIndex: "nombre", key: "nombre" },
+    { title: "Tipo-validar", dataIndex: "isbn", key: "isbn" },
+    // usar render para acceder al arreglo libroStocks y mostrar el stock(enBiblioteca)
+    {
+      title: "Stock Disponible",
+      dataIndex: "enBiblioteca",
+      key: "enBiblioteca",
+      render: (index, record) => {
+        return record.libroStocks.map((libroStock) => {
+          return libroStock.enBiblioteca;
+        });
+      },
+    },
+    // acciones.
   ];
 
   return (
@@ -209,14 +217,14 @@ const Prestamos = ({
           {/* DIV contenedor para las opciones de prestamo. */}
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'right',
-              marginRight: '175px',
+              display: "flex",
+              justifyContent: "right",
+              marginRight: "175px",
             }}
           >
-            <Tooltip title='Ver en consola objeto final'>
+            <Tooltip title="Ver en consola objeto final">
               <Button
-                style={{ backgroundColor: 'lightgreen' }}
+                style={{ backgroundColor: "lightgreen" }}
                 onClick={() => {
                   setPrestamoData({
                     ...prestamoData,
@@ -225,10 +233,10 @@ const Prestamos = ({
                   });
 
                   MySwal.fire({
-                    title: 'Desea guardar el prestamo?',
+                    title: "Desea guardar el prestamo?",
                     showDenyButton: true,
                     showCancelButton: false,
-                    confirmButtonText: 'Guardar Prestamo',
+                    confirmButtonText: "Guardar Prestamo",
                     denyButtonText: `Cancelar`,
                   }).then((result) => {
                     if (result.isConfirmed) {
@@ -248,16 +256,16 @@ const Prestamos = ({
         </Col>
 
         <Col span={12}>
-          <Collapse defaultActiveKey={['0']}>
+          <Collapse defaultActiveKey={["0"]}>
             <Panel
-              key='1'
-              collapsible='header'
-              className='certification-panel'
+              key="1"
+              collapsible="header"
+              className="certification-panel"
               header={<h4>Alumno.</h4>}
             >
               <SearchableTable
                 columns={alumnosColumns}
-                rowKey='rutAlumno'
+                rowKey="rutAlumno"
                 dataSource={alumnos.data ? [...alumnos.data] : []}
                 onChange={(value) => {
                   setAlumno(value);
@@ -265,18 +273,23 @@ const Prestamos = ({
                 }}
                 selectedData={alumno}
                 maxSelection={1}
-                maxSelecctionMessage='Solo puede seleccionar un alumno.'
-                emptyMessage='No hay alumnos para mostrar.'
+                maxSelecctionMessage="Solo puede seleccionar un alumno."
+                emptyMessage="No hay alumnos para mostrar."
               />
             </Panel>
             <Panel
-              key='2'
-              collapsible='header'
-              className='certification-panel'
+              key="2"
+              collapsible="header"
+              className="certification-panel"
               header={<h4>Ejemplares.</h4>}
             >
+              {/*
+                TODO: 
+                      - Cambiar la data y columnas de esta tabla, ahora traera libros,revistas y trabajos.
+                        los, ejemplares se obtendran por id probablemente. 
+               */}
               <SearchableTable
-                rowKey='ejemplarId'
+                rowKey="ejemplarId"
                 columns={ejemplarColumns}
                 dataSource={
                   ejemplaresReducer.data ? [...ejemplaresReducer.data] : []
