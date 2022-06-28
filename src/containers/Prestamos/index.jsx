@@ -39,6 +39,7 @@ const Prestamos = ({
   // Separo la data para prestamoData.
   const [prestamoData, setPrestamoData] = useState({});
   const [alumno, setAlumno] = useState([]);
+  const [libros, setLibros] = useState([]);
   const [ejemplares, setEjemplares] = useState([]);
 
   // hook de efecto inicial.
@@ -63,13 +64,21 @@ const Prestamos = ({
     }
   }, [alumno]);
 
+  // useEffect(() => {
+  //   if (ejemplares.length > 0) {
+  //     setPrestamoData({ ...prestamoData, ejemplares });
+  //   } else if (!ejemplares.length) {
+  //     setPrestamoData({ ...prestamoData, ejemplares: [] });
+  //   }
+  // }, [ejemplares]);
+  
   useEffect(() => {
-    if (ejemplares.length > 0) {
-      setPrestamoData({ ...prestamoData, ejemplares });
-    } else if (!ejemplares.length) {
-      setPrestamoData({ ...prestamoData, ejemplares: [] });
+    if (libros.length > 0) {
+      setPrestamoData({ ...prestamoData, libros });
+    } else if (!libros.length) {
+      setPrestamoData({ ...prestamoData, libros: [] });
     }
-  }, [ejemplares]);
+  }, [libros]);
 
   // Hooks de Efecto para peticion para crear un prestamo.
   useEffect(() => {
@@ -105,6 +114,7 @@ const Prestamos = ({
     return () => {
       setAlumno([]);
       setEjemplares([]);
+      setLibros([]);
       setPrestamoData({});
       clearAlumnosState();
       clearEjemplaresState();
@@ -136,21 +146,54 @@ const Prestamos = ({
   ];
 
   // columnas para la tabla de ejemplares(libros,revistas,trabalajos).
+  // const ejemplarColumns = [
+  //   { title: "Titulo", dataIndex: "nombre", key: "nombre" },
+  //   { title: "Tipo-validar", dataIndex: "isbn", key: "isbn" },
+  //   // usar render para acceder al arreglo libroStocks y mostrar el stock(enBiblioteca)
+  //   {
+  //     title: "Stock Disponible",
+  //     dataIndex: "enBiblioteca",
+  //     key: "enBiblioteca",
+  //     render: (index, record) => {
+  //       return record.libroStocks.map((libroStock) => {
+  //         return libroStock.enBiblioteca;
+  //       });
+  //     },
+  //   },
+  //   // acciones.
+  // ];
+
   const ejemplarColumns = [
-    { title: "Titulo", dataIndex: "nombre", key: "nombre" },
-    { title: "Tipo-validar", dataIndex: "isbn", key: "isbn" },
-    // usar render para acceder al arreglo libroStocks y mostrar el stock(enBiblioteca)
+    {
+      title: "Titulo",
+      dataIndex: "nombre",
+      key: "nombre",
+    },
+    {
+      title: "Fecha de Publicacion",
+      dataIndex: "fechaPublicacion",
+      key: "fechaPublicacion",
+    },
     {
       title: "Stock Disponible",
-      dataIndex: "enBiblioteca",
-      key: "enBiblioteca",
-      render: (index, record) => {
-        return record.libroStocks.map((libroStock) => {
-          return libroStock.enBiblioteca;
-        });
-      },
+      render: (row, record, index) => (
+        <span>
+          {record.libroStocks.map((libroStock) => {
+            return libroStock.enBiblioteca;
+          })}
+        </span>
+      ),
     },
-    // acciones.
+    {
+      title: "Stock Prestado",
+      render: (row, record, index) => (
+        <span>
+          {record.libroStocks.map((libroStock) => {
+            return libroStock.enPrestamo;
+          })}
+        </span>
+      ),
+    },
   ];
 
   return (
@@ -187,15 +230,16 @@ const Prestamos = ({
               )}
             </p>
             <br />
-            <h3>Ejemplares:</h3>
+            <h3>Libros:</h3>
             <ul>
               {ejemplares.length ? (
                 ejemplares.map((ejemplar) => (
                   <li key={ejemplar.ejemplarId}>
                     <p>
+                      {/* TODO: FIX */}
                       {ejemplar.libro ? (
                         <>
-                          <p>{ejemplar.isbn}</p>
+                          <p>{ejemplar.nombre}</p>
                           <p>{ejemplar.libro.nombre}</p>
                           <p>Colocar mas datos del libro??</p>
                           <p>{/* {ejemplar.libro.nombre} */}</p>
@@ -289,16 +333,17 @@ const Prestamos = ({
                         los, ejemplares se obtendran por id probablemente. 
                */}
               <SearchableTable
-                rowKey="ejemplarId"
+                rowKey="libroId"
                 columns={ejemplarColumns}
                 dataSource={
                   ejemplaresReducer.data ? [...ejemplaresReducer.data] : []
                 }
                 onChange={(value) => {
-                  setEjemplares(value);
-                  console.log(ejemplares);
+                  // setEjemplares(value);
+                  setLibros(value);
                 }}
-                selectedData={ejemplares}
+                // selectedData={ejemplares}
+                selectedData={libros}
               />
             </Panel>
           </Collapse>
