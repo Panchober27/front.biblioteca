@@ -71,7 +71,7 @@ const Prestamos = ({
   //     setPrestamoData({ ...prestamoData, ejemplares: [] });
   //   }
   // }, [ejemplares]);
-  
+
   useEffect(() => {
     if (libros.length > 0) {
       setPrestamoData({ ...prestamoData, libros });
@@ -145,24 +145,6 @@ const Prestamos = ({
     },
   ];
 
-  // columnas para la tabla de ejemplares(libros,revistas,trabalajos).
-  // const ejemplarColumns = [
-  //   { title: "Titulo", dataIndex: "nombre", key: "nombre" },
-  //   { title: "Tipo-validar", dataIndex: "isbn", key: "isbn" },
-  //   // usar render para acceder al arreglo libroStocks y mostrar el stock(enBiblioteca)
-  //   {
-  //     title: "Stock Disponible",
-  //     dataIndex: "enBiblioteca",
-  //     key: "enBiblioteca",
-  //     render: (index, record) => {
-  //       return record.libroStocks.map((libroStock) => {
-  //         return libroStock.enBiblioteca;
-  //       });
-  //     },
-  //   },
-  //   // acciones.
-  // ];
-
   const ejemplarColumns = [
     {
       title: "Titulo",
@@ -232,29 +214,16 @@ const Prestamos = ({
             <br />
             <h3>Libros:</h3>
             <ul>
-              {ejemplares.length ? (
-                ejemplares.map((ejemplar) => (
-                  <li key={ejemplar.ejemplarId}>
-                    <p>
-                      {/* TODO: FIX */}
-                      {ejemplar.libro ? (
-                        <>
-                          <p>{ejemplar.nombre}</p>
-                          <p>{ejemplar.libro.nombre}</p>
-                          <p>Colocar mas datos del libro??</p>
-                          <p>{/* {ejemplar.libro.nombre} */}</p>
-                          <p>{/* {ejemplar.libro.nombre} */}</p>
-                        </>
-                      ) : ejemplar.revista ? (
-                        ejemplar.revista.nombre
-                      ) : ejemplar.trabajo ? (
-                        ejemplar.trabajo.titulo
-                      ) : null}
-                    </p>
+              {libros.length ? (
+                libros.map((libro) => (
+                  <li key={libro.libroId}>
+                    {/* TODO: FIX */}
+                    <p>{libro.nombre}</p>
+                    <p>{libro.isbnTipo}</p>
                   </li>
                 ))
               ) : (
-                <li>Seleccione un ejemplar</li>
+                <li>Seleccione un ejemplar // COLOCAR MAS DATOS</li>
               )}
             </ul>
           </div>
@@ -339,10 +308,8 @@ const Prestamos = ({
                   ejemplaresReducer.data ? [...ejemplaresReducer.data] : []
                 }
                 onChange={(value) => {
-                  // setEjemplares(value);
                   setLibros(value);
                 }}
-                // selectedData={ejemplares}
                 selectedData={libros}
               />
             </Panel>
@@ -367,6 +334,7 @@ const mapStateToProps = ({ alumnos, ejemplaresReducer, prestamos }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  // getAlumnos: (isAdmin = false) => dispatch(getAlumnos({isAdmin})),
   getAlumnos: () => dispatch(getAlumnos()),
   clearAlumnosState: () => dispatch(clearAlumnosState()),
   getEjemplares: () => dispatch(getEjemplares()),
