@@ -431,13 +431,14 @@ const HomePage = ({
         <div className='row'>
           <div className='col-12 col-md-6'>
             <ul>
-              <li>Datos del Usuario?</li>
-              <li>Calendario?</li>
-              <li> :( </li>
+              <li>Listar</li>
+              <li>Solicitar Prestamos</li>
+              <li>Realizar Devoluciones</li>
+              <li>Otras Acciones a realizar.</li>
             </ul>
           </div>
           <div className='col-12 col-md-6'>
-            <h4>Mis prestamos.</h4>
+            <h4>Prestamos Realizados.</h4>
             <AdministrationTable
               size='small'
               columns={columns}

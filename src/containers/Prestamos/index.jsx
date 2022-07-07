@@ -213,6 +213,31 @@ const Prestamos = ({
             </p>
             <br />
             <h3>Libros:</h3>
+
+
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Seleccione ejemplar.</h5>
+                <p className="card-text">
+                  {
+                    libros.length ? (
+                      <>
+                        {libros[0].nombre}
+                        <br />
+                        {libros[0].fechaPublicacion}
+                      </>
+                    ) : (
+                      <>
+                        <span>Seleccione un libro</span>
+                      </>
+                    )
+                  }
+                </p>
+              </div>
+            </div>            
+            
+            
+            
             <ul>
               {libros.length ? (
                 libros.map((libro) => (
@@ -226,6 +251,8 @@ const Prestamos = ({
                 <li>Seleccione un ejemplar // COLOCAR MAS DATOS</li>
               )}
             </ul>
+
+
           </div>
           {/* DIV contenedor para las opciones de prestamo. */}
           <div
