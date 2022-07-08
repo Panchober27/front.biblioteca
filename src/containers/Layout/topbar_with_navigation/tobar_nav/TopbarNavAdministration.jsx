@@ -22,11 +22,18 @@ const TopbarNavAdministration = ({ users, clearPermissionsState }) => {
         <DownIcon />
       </DropdownToggle>
       <DropdownMenu className='topbar__nav-dropdown-menu dropdown__menu'>
+      
+      <DropdownItem>
+        <TopbarNavLink title='Prestar Libros' route='/prestamos' />
+      </DropdownItem>
+      
+      <DropdownItem>
+        <TopbarNavLink title='Devolver Ejemplares' route='/rankings' />
+      </DropdownItem>
         
       <DropdownItem>
         <TopbarNavLink title='Rankings' route='/rankings' />
       </DropdownItem>
-
 
         {/* {hasPermission('ver-listado-calibraciones', userPermissions) ? (
           <DropdownItem>

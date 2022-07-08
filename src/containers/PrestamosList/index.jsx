@@ -1,99 +1,362 @@
 import React, { useState, useEffect } from "react";
-import { InputField, AdministrationTable } from "../../components/common";
-import { Drawer, Button, Tooltip, Menu, Panel, Collapse } from "antd";
+import { connect } from "react-redux";
+import {
+  getPrestamosOfLoggedUser,
+  clearPrestamosState,
+} from "../../redux/reducers/prestamosReducer";
+import { useHistory } from "react-router-dom";
+import { InputField, AdministrationTable, SearchableTable } from "../../components/common";
+import { Drawer, Button, Tooltip, Modal, Row, Col } from "antd";
 import { MenuOutlined, FileAddTwoTone } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { VscPreview } from "react-icons/vsc";
+import { AiOutlineFileDone } from "react-icons/ai";
 
-const PrestamosList = () => {
-  const { SubMenu } = Menu;
-  const { Panel } = Collapse;
+const PrestamosList = ({
+  prestamos,
+  getPrestamosOfLoggedUser,
+  clearPrestamosState,
+}) => {
+  const MySwal = withReactContent(swal);
+  const history = useHistory();
 
-  // hook de estado: Cual panel esta activo.
-  const [activePanel, setActivePanel] = useState("0");
+  // hook de estado: El modal de detalles es visible o no.
+  const [prestamoDetailsModalVisible, setPrestamoDetailsModalVisible] =
+    useState(false);
 
+  // hook de estado: Modal para realizar devolucion de ejemplares.
+  const [devolucionesModalVisible, setDevolucionesModalVisible] =
+    useState(false);
 
+  // hook de estado: Prestamo obtenido desde la tabla.
+  const [prestamoData, setPrestamoData] = useState({});
 
-  // hook de estado: Filtros para busqueda de prestamos.
-  // filtros pueden ser: [fechas, usuario, estado, titulo(nombre:libro(ejemplar))]
-  const [filters, setFilters] = useState({});
+  // Hook de estado para arreglo de ejemplares que se les realizara una devolucion.
+  // caso de uso: alumno retorna 2 libros de un prestamo, usuario selecciona esos libros y se guardan en este hook.
+  const [selectedEjemplares, setSelectedEjemeplares] = useState([{}]);
 
-
-
-  // columnas para la tabla principal de prestamos.
+  // Columnas para la tabla con multiples prestamos.🐱‍👤
   const columns = [
+    { title: "Codigo", dataIndex: "prestamoId", key: "prestamoId" },
+    { title: "Ejemplares", dataIndex: "ejemplares", key: "ejemplares" },
     {
-      title: "Nombre",
-      dataIndex: "nombre",
-      key: "nombre",
+      title: "Alumno",
+      dataIndex: ["alumno", "nombreAlumno"],
+      key: "alumno.nombres",
+    },
+    { title: "Estado", dataIndex: "estado", key: "estado" },
+    { title: "Dias atraso", dataIndex: "diasAtraso", key: "diasAtraso" },
+    {
+      title: "Acciones",
+      dataIndex: "acciones",
+      key: "acciones",
+      render: (row, record, index) => (
+        <div className="administration-actions-container">
+          <Tooltip title="Ver detalle">
+            <button
+              style={{ border: "none" }}
+              onClick={() => {
+                setPrestamoData(record);
+                setPrestamoDetailsModalVisible(true);
+              }}
+            >
+              <VscPreview
+                className="administration-action-icon"
+                style={{ fontSize: "20px", color: "#2B8EFB" }}
+                // onClick={() => {
+                //   // setPrestamoData(record);
+                //   setPrestamoDetailsModalVisible(true);
+                // }}
+              />
+            </button>
+          </Tooltip>
+
+          {/* VALIDAR SI EL PRESTAMO ESTA PARA SER DEVUELTO */}
+
+          <Tooltip title="Realizar Devolución">
+            <button style={{ border: "none" }}>
+              <AiOutlineFileDone
+                className="administration-action-icon"
+                style={{ fontSize: "20px", color: "#2B8EFB" }}
+                onClick={() => {
+                  setDevolucionesModalVisible(true);
+                  // TODO: Obtener el prestamo seleccionado.
+                  setPrestamoData(record);
+                  // manipular datos para que el renderizado.
+                }}
+              />
+            </button>
+          </Tooltip>
+        </div>
+      ),
     },
   ];
 
-  return (
-    <>
-      <h1 style={{textAlign: "center"}}>Listado Prestamos</h1>
+  // Opciones para la tabla de prestamos.
+  const prestamosTableOptions = [
+    {
+      title: "Crear Nuevo Prestamo",
+      onClick: () => {
+        // enviar a ruta /cePrestamo
+        // enviar id si es revision de datos.
+        history.push("/cePrestamo");
+      },
+    },
+  ];
 
-      <Collapse
-        accordion
-        defaultActiveKey={["1"]}
-        activeKey={activePanel}
-        destroyInactivePanel
-        // onChange={(activePanel) => setActivePanel(activePanel === '1' ? '1' : '0')}
-      >
-        <Panel
-          className="certification-panel"
-          header={
-            <h4
+  // HOOKS DE EFECTO
+  useEffect(() => {
+    getPrestamosOfLoggedUser();
+  }, []);
+
+  useEffect(() => {
+    if (prestamos.onStartFetch) {
+      MySwal.fire({
+        title: "Cargando Datos...",
+      });
+      MySwal.showLoading();
+    } else {
+      MySwal.close();
+    }
+  }, [prestamos]);
+
+  // Hook de efecto final: resetear los datos necesarios.
+  useEffect(() => {
+    return () => {
+      clearPrestamosState();
+    };
+  }, []);
+
+  // Funcion para renderizar el modal con el detalle de cada prestamoData.
+  const renderPrestamoDetails = () => (
+    // <CustomModal
+    <Modal
+      title="Detalle del prestamoData"
+      visible={prestamoDetailsModalVisible}
+      width={900}
+      destroyOnClose
+      onCancel={() => {
+        setPrestamoData({});
+        setPrestamoDetailsModalVisible(false);
+      }}
+      footer={
+        <div className="administration-modal-footer">
+          <Button
+            type="danger"
+            onClick={() => {
+              setPrestamoData({});
+              setPrestamoDetailsModalVisible(false);
+            }}
+          >
+            Cerrar
+          </Button>
+        </div>
+      }
+    >
+      <Row gutter={16}>
+        <Col span={12}>
+          <p>
+            <b>Codigo:</b>{" "}
+            {prestamoData.prestamoId ? prestamoData.prestamoId : "----"}
+          </p>
+        </Col>
+        <Col span={12}>
+          <p>
+            <b>Alumno:</b>{" "}
+            {prestamoData.alumno && prestamoData.alumno.nombreAlumno
+              ? prestamoData.alumno.nombreAlumno
+              : "----"}
+          </p>
+        </Col>
+        <Col span={12}>
+          <p>
+            <b>Estado:</b> {prestamoData.estado ? prestamoData.estado : "----"}
+          </p>
+        </Col>
+        {/* si el prestamoData tiene dias de atraso se muestra el dato, sino no */}
+        {prestamoData.diasAtraso > 0 ? (
+          <Col span={12}>
+            <p>
+              <b>Dias de Atraso:</b> {prestamoData.diasAtraso}
+            </p>
+          </Col>
+        ) : null}
+        {prestamoData.usuario ? (
+          <Col span={12}>
+            <p>
+              <b>Usuario Responsable:</b>{" "}
+              {prestamoData.usuario.nombre +
+                " " +
+                prestamoData.usuario.apellido}
+            </p>
+          </Col>
+        ) : null}
+      </Row>
+      {/* </CustomModal> */}
+    </Modal>
+  );
+
+  // Funcion que renderiza Modal o Drawer
+  // para reliazar devoluciones de ejemplares asociados al prestamo seleccionado.
+  const renderDevolucionModal = () => (
+    <>
+      <Modal
+        title="Realizar Devolución"
+        visible={devolucionesModalVisible}
+        width={900}
+        destroyOnClose
+        onCancel={() => {
+          setDevolucionesModalVisible(false);
+        }}
+        footer={
+          <div className="administration-modal-footer">
+            <Button
+              type="danger"
               onClick={() => {
-                activePanel === 1 ? setActivePanel(0) : setActivePanel(1);
+                setPrestamoData({});
+                setDevolucionesModalVisible(false);
               }}
             >
-              Filtros de Busqueda
-            </h4>
-          }
-          extra={
-            <>
-              <Tooltip title="Agregar">
-                <Button>
-                  <FileAddTwoTone />
-                </Button>
-              </Tooltip>
-            </>
-            // <CertMenu showExcel={showExcel} downloadExcel={downloadExcel} />
-          }
-          key="1"
-        >
-          <p>
-            Formulario con filtros.
-          </p>
-          {/* <CertFilters
-            filterCerts={filterCerts}
-            filters={filters}
-            setFilters={setFilters}
-            cleanFiltersFields={cleanFiltersFields}
-            divisions={divisions.divisions}
-            onSubmit={(e) => console.log(e)}
-          /> */}
-        </Panel>
-      </Collapse>
-
-      <Tooltip title="Ejemplo de tooltip" placement="right">
-        <Link to="/cePrestamo">
-          {/* ENVIAR POR ROUTER EL ID DEL PRESTAMO A EDITAR (SI ES EDICIÓN) */}
-        </Link>
-      </Tooltip>
-
-      {/* <div className="container-fluid">
-        <div className="row">
-          <div className="col 12">
-            <AdministrationTable
-              columns={columns}
-              dataSource={[]}
-            />
+              Cerrar
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                // alert('new button');
+                MySwal.fire({
+                  title: "Actualizar Prestamo",
+                  text: "Crear validacion, en caso de que e entreguen todos o el ultimo ejemplar!🐱‍👤",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Si, realizar devolución!",
+                  cancelButtonText: "Cancelar",
+                }).then((result) => {
+                  if (result.value) {
+                    // TODO: Realizar devoluciones de ejemplares.
+                    // usar contador de array de ejemplares???
+                    // cuando el contador llegue a 0, se termina el prestamo🐱‍👤.
+                  }
+                });
+              }}
+            >
+              Guardar Cambios
+            </Button>
           </div>
+        }
+      >
+        <button
+          onClick={() => {
+            console.log(prestamoData);
+          }}
+        >
+          Ver Prestamos Data.
+        </button>
+        <Row gutter={16}>
+          <Col span={12}>
+            <SearchableTable
+              // columns={ejemplaresCols}
+              columns={[]}
+              dataSource={
+                prestamoData.prestamoEjemplars
+                  ? [...prestamoData.prestamoEjemplars]
+                  : []
+              }
+              rowKey="prestamoId"
+              onChange={(row) => {
+                setSelectedEjemeplares(row);
+              }}
+            />
+            <p>Ejemplares a devolver:</p>
+
+            {selectedEjemplares && selectedEjemplares.length > 0 ? (
+              <ul>
+                {selectedEjemplares.map((ejemplar) => (
+                  <li key={ejemplar.ejemplarId}>
+                    {ejemplar.ejemplarId} -
+                    {ejemplar.ejemplar && ejemplar.ejemplar.libro ? (
+                      <>{ejemplar.ejemplar.libro.nombre}</>
+                    ) : ejemplar.ejemplar && ejemplar.ejemplar.revista ? (
+                      <>{ejemplar.ejemplar.revista.nombre}</>
+                    ) : ejemplar.ejemplar && ejemplar.ejemplar.trabajo ? (
+                      <>{ejemplar.ejemplar.trabajo.nombre}</>
+                    ) : null}
+                    {/* TODO:
+                        Armar vista de los ejemplares que se estan
+                        guardando para ser devueltos.
+                     */}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No hay ejemplares seleccionados</p>
+            )}
+          </Col>
+          <Col span={12}>
+            <p>
+              <b>Estado:</b> {prestamoData.estado}
+            </p>
+            {prestamoData.usuario ? (
+              <p>
+                <b>Usuario Responsable:</b>{" "}
+                {prestamoData.usuario.nombre +
+                  " " +
+                  prestamoData.usuario.apellido}
+              </p>
+            ) : null}
+            {prestamoData.alumno ? (
+              <p>
+                <b>Alumno:</b>{" "}
+                {`${prestamoData.alumno.nombreAlumno} ${prestamoData.alumno.apellidoAlumno}`}
+              </p>
+            ) : null}
+            <p>
+              <b>Fecha Inicio:</b>
+              {prestamoData.fechaInicio}
+            </p>
+            <p>
+              <b>Fecha Fin:</b>
+              {prestamoData.fechaFin}
+            </p>
+          </Col>
+        </Row>
+      </Modal>
+    </>
+  );
+
+  return (
+    <>
+      <h2>Nueva vista de prestamos.</h2>
+      <AdministrationTable
+        size="small"
+        columns={columns}
+        options={prestamosTableOptions}
+        dataSource={prestamos.data ? [...prestamos.data] : []}
+      />
+
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-12"></div>
         </div>
-      </div> */}
+      </div>
+
+      {renderPrestamoDetails()}
+      {renderDevolucionModal()}
+
     </>
   );
 };
 
-export default PrestamosList;
+const mapStateToProps = ({ prestamos }) => ({
+  prestamos,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getPrestamosOfLoggedUser: () => dispatch(getPrestamosOfLoggedUser()),
+  clearPrestamosState: () => dispatch(clearPrestamosState()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PrestamosList);
