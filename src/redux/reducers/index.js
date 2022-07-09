@@ -9,3 +9,4 @@ export { default as permissions } from './permissionsReducer';
 export { default as prestamos } from './prestamosReducer';
 export { default as ejemplaresReducer } from './ejemplaresReducer';
 export { default as alumnos } from './alumnosReducer';
+export { default as uploads } from './uploadsReducer';

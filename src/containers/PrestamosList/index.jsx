@@ -5,7 +5,11 @@ import {
   clearPrestamosState,
 } from "../../redux/reducers/prestamosReducer";
 import { useHistory } from "react-router-dom";
-import { InputField, AdministrationTable, SearchableTable } from "../../components/common";
+import {
+  InputField,
+  AdministrationTable,
+  SearchableTable,
+} from "../../components/common";
 import { Drawer, Button, Tooltip, Modal, Row, Col } from "antd";
 import { MenuOutlined, FileAddTwoTone } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -89,6 +93,45 @@ const PrestamosList = ({
               />
             </button>
           </Tooltip>
+        </div>
+      ),
+    },
+  ];
+
+  // Columnas para la tabla con ejemplares del prestamo seleccionado para editar (devoluciones)
+  const ejemplaresCols = [
+    {
+      title: "ISBN",
+      dataIndex: ["ejemplar", "isbn"],
+      key: "isbn",
+    },
+    {
+      title: "Titulo",
+      render: (row, record, index) => (
+        <div>
+          {record.ejemplar.libro.nombre
+            ? record.ejemplar.libro.nombre
+            : "no hay"}
+        </div>
+      ),
+    },
+    {
+      title: "Fecha Inicio",
+      render: (row, record, index) => (
+        <div>
+          {record.ejemplar.fechaEntrega
+            ? record.ejemplar.fechaEntrega
+            : "no hay fecha"}
+        </div>
+      ),
+    },
+    {
+      title: "Fecha Fin",
+      render: (row, record, index) => (
+        <div>
+          {record.ejemplar.fechaFin
+            ? record.ejemplar.fechaFin
+            : "no hay fecha!"}
         </div>
       ),
     },
@@ -258,8 +301,7 @@ const PrestamosList = ({
         <Row gutter={16}>
           <Col span={12}>
             <SearchableTable
-              // columns={ejemplaresCols}
-              columns={[]}
+              columns={ejemplaresCols}
               dataSource={
                 prestamoData.prestamoEjemplars
                   ? [...prestamoData.prestamoEjemplars]
@@ -345,7 +387,6 @@ const PrestamosList = ({
 
       {renderPrestamoDetails()}
       {renderDevolucionModal()}
-
     </>
   );
 };
