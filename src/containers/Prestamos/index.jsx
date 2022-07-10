@@ -198,13 +198,17 @@ const Prestamos = ({
             <h3>Alumno:</h3>
             <p>
               {alumno.length ? (
-                <>
-                  {alumno[0].nombreAlumno}
-                  <br />
-                  {alumno[0].rutAlumno}
-                  <br />
-                  {alumno[0].emailAlumno}
-                </>
+                <div className="card">
+                  <div className="card-body">
+                    <>
+                      {alumno[0].nombreAlumno}
+                      <br />
+                      {alumno[0].rutAlumno}
+                      <br />
+                      {alumno[0].emailAlumno}
+                    </>
+                  </div>
+                </div>
               ) : (
                 <>
                   <span>Seleccione un alumno</span>
@@ -213,50 +217,46 @@ const Prestamos = ({
             </p>
             <br />
             <h3>Libros:</h3>
-
-
-            <div className="card">
-              <div className="card-body">
-                <p className="card-text">
-                  {
-                    libros.length ? (
-                      <>
-                        {libros[0].nombre}
-                        {libros[0].fechaPublicacion}
-                      </>
-                    ) : (
-                      <>
-                        <span>Seleccione un libro</span>
-                      </>
-                    )
-                  }
-                </p>
-              </div>
-            </div>            
-            
-            <ul>
+            <p>
               {libros.length ? (
-                libros.map((libro) => (
-                  <li key={libro.libroId}>
-                    {/* TODO: FIX */}
-                    <p>{libro.nombre}</p>
-                    <p>setear fecha de devolucion</p>
-                  <DatePickerField
-                    style={{ width: "10px" }}
-                    name="fechaDevolucion"
-                    label="Fecha de Devolucion"
-                    placeholder="Seleccione una fecha"
-                    // TODO: en el onChange, setear fechas de devolucion en los ejemplares
-                    // almacenar las ficehas de devolucion en una variable para calcular la ultima y asignarla al prestamo.
-                    onChange={(value) => {}}
-                  />
-                    <p>{libro.isbnTipo}</p>
-                  </li>
-                ))
-              ) : null }
+                <>
+                  {/* Titulo: {libros[0].nombre} */}
+                  {/* {libros[0].fechaPublicacion} */}
+                </>
+              ) : (
+                <>
+                  <span>Seleccione un libro</span>
+                </>
+              )}
+            </p>
+            <ul>
+              {libros.length
+                ? libros.map((libro) => (
+                    <li key={libro.libroId}>
+                      {/* TODO: FIX */}
+                      <p>{libro.nombre}</p>
+                      <p>setear fecha de devolucion</p>
+                      <DatePickerField
+                        style={{ width: "10px" }}
+                        name="fechaDevolucion"
+                        label="Fecha de Devolucion"
+                        placeholder="Seleccione una fecha"
+                        // TODO: en el onChange, setear fechas de devolucion en los ejemplares
+                        // almacenar las ficehas de devolucion en una variable para calcular la ultima y asignarla al prestamo.
+                        onChange={(value) => {
+                          // setear al ejemplar la fecha de fin
+                          console.log(value);
+                          setPrestamoData({
+                            ...prestamoData,
+                            fechaDevolucion: value,
+                          });
+                        }}
+                      />
+                      <p>{libro.isbnTipo}</p>
+                    </li>
+                  ))
+                : null}
             </ul>
-
-
           </div>
           {/* DIV contenedor para las opciones de prestamo. */}
           <div
@@ -288,10 +288,10 @@ const Prestamos = ({
                       // TODO: cuando el reductor responda de manera correcta. enviar por history a prestamosList
                     }
                     // else if (result.isDenied) {
-                      //   MySwal.fire('Cancelado', '', 'info')
-                      // }
-                    });
-                    console.log(prestamoData);
+                    //   MySwal.fire('Cancelado', '', 'info')
+                    // }
+                  });
+                  console.log(prestamoData);
                 }}
               >
                 <span>Aceptar</span>

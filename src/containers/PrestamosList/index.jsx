@@ -17,6 +17,8 @@ import swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { VscPreview } from "react-icons/vsc";
 import { AiOutlineFileDone } from "react-icons/ai";
+// importar moment
+import moment from "moment";
 
 const PrestamosList = ({
   prestamos,
@@ -218,6 +220,25 @@ const PrestamosList = ({
             <b>Estado:</b> {prestamoData.estado ? prestamoData.estado : "----"}
           </p>
         </Col>
+
+        <Col span={12}>
+          <p>
+            <b>Fecha Inicio:</b>{" "}
+            {prestamoData.fechaInicio
+              ? moment(prestamoData.fechaInicio).format("DD-MM-YYYY")
+              : "----"}
+          </p>
+        </Col>
+
+        <Col span={12}>
+          <p>
+            <b>Fecha Termino:</b>{" "}
+            {prestamoData.fechaFin
+              ? moment(prestamoData.fechaFin).format("DD-MM-YYYY")
+              : "----"}
+          </p>
+        </Col>
+
         {/* si el prestamoData tiene dias de atraso se muestra el dato, sino no */}
         {prestamoData.diasAtraso > 0 ? (
           <Col span={12}>
@@ -357,11 +378,11 @@ const PrestamosList = ({
             ) : null}
             <p>
               <b>Fecha Inicio:</b>
-              {prestamoData.fechaInicio}
+              {moment(prestamoData.fechaInicio).format("DD-MM-YYYY")}
             </p>
             <p>
               <b>Fecha Fin:</b>
-              {prestamoData.fechaFin}
+              {moment(prestamoData.fechaFin).format("DD-MM-YYYY")}
             </p>
           </Col>
         </Row>

@@ -37,7 +37,7 @@ const HomePage = () => {
   return (
     <>
       <h1>HomePage</h1>
-      <div
+      {/* <div
         style={{
           display: "flex",
           justifyContent: "center",
@@ -58,9 +58,9 @@ const HomePage = () => {
             <h3 style={contentStyle}>3</h3>
           </div>
         </Carousel>
-      </div>
+      </div> */}
 
-      {/* <p style={{ textAlign: "center" }}>
+      <p style={{ textAlign: "center" }}>
         Demo para subir archivo al servidor <br />
         el servidor lee estos archivos y actualiza la base de datos.
       </p>
@@ -81,7 +81,7 @@ const HomePage = () => {
         <button type="button">
           Subir
         </button>
-      </div> */}
+      </div>
 
       {/* <div className='container-fluid'>
         <div className='row'>
