@@ -99,12 +99,12 @@ const Prestamos = ({
       });
       MySwal.showLoading();
     } else if (prestamos.onErrorFetch) {
-      MySwal.fire({
-        title: "Error",
-        text: "El prestamo no se pudo crear",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
+      // MySwal.fire({
+      //   title: "Error",
+      //   text: "El prestamo no se pudo crear",
+      //   icon: "error",
+      //   confirmButtonText: "Ok",
+      // });
       clearPrestamosState();
       clearPrestamoV2State();
     }
@@ -143,6 +143,24 @@ const Prestamos = ({
       dataIndex: "emailAlumno",
       key: "emailAlumno",
     },
+    {
+      title: "Activo",
+      dataIndex: "alumnoActivo",
+      key: "alumnoActivo",
+      render: (text) => (
+        <span>
+          {text ? (
+            <span style={{ backgroundColor: 'green'}}>
+              SI
+            </span>
+          ) : (
+            <span style={{ backgroundColor: 'red'}}>
+              NO
+            </span>
+          )}
+        </span>
+      ),
+    }
   ];
 
   const ejemplarColumns = [
@@ -244,11 +262,17 @@ const Prestamos = ({
                         // TODO: en el onChange, setear fechas de devolucion en los ejemplares
                         // almacenar las ficehas de devolucion en una variable para calcular la ultima y asignarla al prestamo.
                         onChange={(value) => {
-                          // setear al ejemplar la fecha de fin
-                          console.log(value);
+                          // crear un hook de estado para almacenar de manera correcta la fecha en los libros.
+
+
                           setPrestamoData({
                             ...prestamoData,
-                            fechaDevolucion: value,
+                            libros: prestamoData.libros.map((libro) => {
+                              if (libro.libroId === libro.libroId) {
+                                libro.fechaRetorno = value;
+                              }
+                              return libro;
+                            }),
                           });
                         }}
                       />
@@ -314,7 +338,7 @@ const Prestamos = ({
                 dataSource={alumnos.data ? [...alumnos.data] : []}
                 onChange={(value) => {
                   setAlumno(value);
-                  console.log(alumno);
+                  // console.log(alumno);
                 }}
                 selectedData={alumno}
                 maxSelection={1}
