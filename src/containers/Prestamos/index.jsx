@@ -18,6 +18,7 @@ import {
   clearPrestamosState,
   clearPrestamoV2State,
 } from "../../redux/reducers/prestamosReducer";
+import * as moment from 'moment'
 
 const Prestamos = ({
   prestamos,
@@ -110,18 +111,6 @@ const Prestamos = ({
     }
   }, [prestamos]);
 
-  useEffect(() => {
-    return () => {
-      setAlumno([]);
-      setEjemplares([]);
-      setLibros([]);
-      setPrestamoData({});
-      clearAlumnosState();
-      clearEjemplaresState();
-      clearPrestamosState();
-      clearPrestamoV2State();
-    };
-  }, []);
 
   // formulario para ingresar datos del alumno.
   // validar, quizas mediante peticion que el alumno este habilitado.
@@ -201,6 +190,14 @@ const Prestamos = ({
       <button
         onClick={() => {
           console.log(prestamoData);
+          const fechaDevolucion = prestamoData.libros.reduce((fechaDev, l) => {
+            console.log(l.fechaRetorno)
+            const fecha = moment(l.fechaRetorno, "DD-MM-YYYY").valueOf()
+            return fecha > fechaDev ? fecha : fechaDev
+          }, 0)
+          console.log(moment(fechaDevolucion).format("DD-MM-YYYY"))
+
+          
         }}
       >
         Ver prestamoData
@@ -264,16 +261,17 @@ const Prestamos = ({
                         onChange={(value) => {
                           // crear un hook de estado para almacenar de manera correcta la fecha en los libros.
 
-
-                          setPrestamoData({
-                            ...prestamoData,
-                            libros: prestamoData.libros.map((libro) => {
-                              if (libro.libroId === libro.libroId) {
-                                libro.fechaRetorno = value;
+                        // EL BENJA ME AYUDO CON ESTOOOO!!!!
+                        // 🐱‍👤🐱‍👤🐱‍👤🐱‍👤🐱‍👤🐱‍👤🐱‍👤🐱‍👤🐱‍👤📗📗📗📗📗📗📗📗📗
+                          setPrestamoData((prevData) => ({
+                            ...prevData,
+                            libros: prevData.libros.map((l) => {
+                              if (l.libroId === libro.libroId) {
+                                l.fechaRetorno = value;
                               }
-                              return libro;
+                              return l;
                             }),
-                          });
+                          }));
                         }}
                       />
                       <p>{libro.isbnTipo}</p>
