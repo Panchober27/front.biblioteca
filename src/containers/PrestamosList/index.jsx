@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {
   getPrestamosOfLoggedUser,
-  clearPrestamosState,
-} from "../../redux/reducers/prestamosReducer";
+  clearUserPrestamosState,
+} from '../../redux/reducers/userPrestamosReducer';
+
 import { useHistory } from "react-router-dom";
 import {
   InputField,
@@ -21,7 +22,7 @@ import { AiOutlineFileDone } from "react-icons/ai";
 import moment from "moment";
 
 const PrestamosList = ({
-  prestamos,
+  userPrestamos,
   getPrestamosOfLoggedUser,
   clearPrestamosState,
 }) => {
@@ -43,7 +44,7 @@ const PrestamosList = ({
   // caso de uso: alumno retorna 2 libros de un prestamo, usuario selecciona esos libros y se guardan en este hook.
   const [selectedEjemplares, setSelectedEjemeplares] = useState([{}]);
 
-  // Columnas para la tabla con multiples prestamos.🐱‍👤
+  // Columnas para la tabla con multiples userPrestamos.🐱‍👤
   const columns = [
     { title: "Codigo", dataIndex: "prestamoId", key: "prestamoId" },
     { title: "Ejemplares", dataIndex: "ejemplares", key: "ejemplares" },
@@ -139,7 +140,7 @@ const PrestamosList = ({
     },
   ];
 
-  // Opciones para la tabla de prestamos.
+  // Opciones para la tabla de userPrestamos.
   const prestamosTableOptions = [
     {
       title: "Crear Nuevo Prestamo",
@@ -157,7 +158,7 @@ const PrestamosList = ({
   }, []);
 
   useEffect(() => {
-    if (prestamos.onStartFetch) {
+    if (userPrestamos.onStartFetch) {
       MySwal.fire({
         title: "Cargando Datos...",
       });
@@ -165,7 +166,7 @@ const PrestamosList = ({
     } else {
       MySwal.close();
     }
-  }, [prestamos]);
+  }, [userPrestamos]);
 
   // Hook de efecto final: resetear los datos necesarios.
   useEffect(() => {
@@ -392,12 +393,12 @@ const PrestamosList = ({
 
   return (
     <>
-      <h2>Nueva vista de prestamos.</h2>
+      <h2>Nueva vista de userPrestamos.</h2>
       <AdministrationTable
         size="small"
         columns={columns}
         options={prestamosTableOptions}
-        dataSource={prestamos.data ? [...prestamos.data] : []}
+        dataSource={userPrestamos.data ? [...userPrestamos.data] : []}
       />
 
       <div className="container-fluid">
@@ -412,13 +413,13 @@ const PrestamosList = ({
   );
 };
 
-const mapStateToProps = ({ prestamos }) => ({
-  prestamos,
+const mapStateToProps = ({ userPrestamos }) => ({
+  userPrestamos,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getPrestamosOfLoggedUser: () => dispatch(getPrestamosOfLoggedUser()),
-  clearPrestamosState: () => dispatch(clearPrestamosState()),
+  clearUserPrestamosState: () => dispatch(clearUserPrestamosState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PrestamosList);

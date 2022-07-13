@@ -15,8 +15,7 @@ import {
 } from "../../redux/reducers/ejemplaresReducer";
 import {
   createPrestamo,
-  clearPrestamosState,
-  clearPrestamoV2State,
+  clearPrestamoState,
 } from "../../redux/reducers/prestamosReducer";
 import * as moment from 'moment'
 
@@ -33,17 +32,12 @@ const Prestamos = ({
 }) => {
   const MySwal = withReactContent(swal);
   const history = useHistory();
-  const { SubMenu } = Menu;
   const { Panel } = Collapse;
 
-  // hook de estado: data del prestamo.
-  // Separo la data para prestamoData.
   const [prestamoData, setPrestamoData] = useState({});
   const [alumno, setAlumno] = useState([]);
   const [libros, setLibros] = useState([]);
-  const [ejemplares, setEjemplares] = useState([]);
 
-  // hook de efecto inicial.
   useEffect(() => {
     getAlumnos();
     getEjemplares();
@@ -65,13 +59,6 @@ const Prestamos = ({
     }
   }, [alumno]);
 
-  // useEffect(() => {
-  //   if (ejemplares.length > 0) {
-  //     setPrestamoData({ ...prestamoData, ejemplares });
-  //   } else if (!ejemplares.length) {
-  //     setPrestamoData({ ...prestamoData, ejemplares: [] });
-  //   }
-  // }, [ejemplares]);
 
   useEffect(() => {
     if (libros.length > 0) {
@@ -90,8 +77,7 @@ const Prestamos = ({
         icon: "success",
         confirmButtonText: "Ok",
       });
-      clearPrestamosState();
-      clearPrestamoV2State();
+      clearPrestamoState();
       history.push("/prestamos");
     } else if (prestamos.onStartFetch) {
       MySwal.fire({
@@ -100,20 +86,11 @@ const Prestamos = ({
       });
       MySwal.showLoading();
     } else if (prestamos.onErrorFetch) {
-      // MySwal.fire({
-      //   title: "Error",
-      //   text: "El prestamo no se pudo crear",
-      //   icon: "error",
-      //   confirmButtonText: "Ok",
-      // });
-      clearPrestamosState();
-      clearPrestamoV2State();
+      clearPrestamoState();
     }
   }, [prestamos]);
 
 
-  // formulario para ingresar datos del alumno.
-  // validar, quizas mediante peticion que el alumno este habilitado.
 
   // columnas para la tabla de alumnos (selector de alumno para prestamos)
   const alumnosColumns = [
@@ -196,8 +173,6 @@ const Prestamos = ({
             return fecha > fechaDev ? fecha : fechaDev
           }, 0)
           console.log(moment(fechaDevolucion).format("DD-MM-YYYY"))
-
-          
         }}
       >
         Ver prestamoData
@@ -295,9 +270,10 @@ const Prestamos = ({
                   setPrestamoData({
                     ...prestamoData,
                     alumno: alumno,
-                    ejemplares: ejemplares,
                   });
 
+
+                  // TODO: MOSTRAR VISTA PREVIA FINAL DEL PRESTAMO A PRESTAR
                   MySwal.fire({
                     title: "Desea guardar el prestamo?",
                     showDenyButton: true,
@@ -331,12 +307,12 @@ const Prestamos = ({
               header={<h4>Alumno.</h4>}
             >
               <SearchableTable
+                alumnos={true}
                 columns={alumnosColumns}
                 rowKey="rutAlumno"
                 dataSource={alumnos.data ? [...alumnos.data] : []}
                 onChange={(value) => {
                   setAlumno(value);
-                  // console.log(alumno);
                 }}
                 selectedData={alumno}
                 maxSelection={1}
@@ -350,11 +326,6 @@ const Prestamos = ({
               className="certification-panel"
               header={<h4>Ejemplares.</h4>}
             >
-              {/*
-                TODO: 
-                      - Cambiar la data y columnas de esta tabla, ahora traera libros,revistas y trabajos.
-                        los, ejemplares se obtendran por id probablemente. 
-               */}
               <SearchableTable
                 rowKey="libroId"
                 columns={ejemplarColumns}
@@ -374,12 +345,6 @@ const Prestamos = ({
   );
 };
 
-// Reducers.
-// - Ejemplares.
-// - Alumnos.
-// - Prestamos.
-
-//  Al traer alumnos se traeran los prestamos relacionados al alumno.
 
 const mapStateToProps = ({ alumnos, ejemplaresReducer, prestamos }) => ({
   alumnos,
@@ -388,14 +353,12 @@ const mapStateToProps = ({ alumnos, ejemplaresReducer, prestamos }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // getAlumnos: (isAdmin = false) => dispatch(getAlumnos({isAdmin})),
   getAlumnos: () => dispatch(getAlumnos()),
   clearAlumnosState: () => dispatch(clearAlumnosState()),
   getEjemplares: () => dispatch(getEjemplares()),
   clearEjemplaresState: () => dispatch(clearEjemplaresState()),
   createPrestamo: (body) => dispatch(createPrestamo(body)),
-  clearPrestamosState: () => dispatch(clearPrestamosState()),
-  clearPrestamoV2State: () => dispatch(clearPrestamoV2State()),
+  clearPrestamoState: () => dispatch(clearPrestamoState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Prestamos);

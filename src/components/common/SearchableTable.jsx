@@ -16,6 +16,7 @@ import { GoThreeBars } from 'react-icons/go';
  * @param {{title:string, onClick:function}[]} param0.menuOptions
  */
 const SearchableTable = ({
+  alumnos = false, // si es tabla alumnos se valida la propiedad alumnoActivo para responder.
   columns,
   expandableRows = false,
   expandableItem,
@@ -49,6 +50,14 @@ const SearchableTable = ({
       return;
     }
 
+    if (alumnos) {
+      selectedData.forEach((i) => {
+        if (i.alumnoActivo === 0 || i.alumnoActivo === null || i.alumnoActivo === false) {
+          message.error('El alumno seleccionado no está activo', 2.5);
+        }
+      });
+    }
+
     onChange(selectedData);
   }, [selectedData]);
 
@@ -63,6 +72,19 @@ const SearchableTable = ({
         return;
       }
 
+      if (alumnos) {
+        let flag = false;
+        row.forEach((i) => {
+          if(i.alumnoActivo === 0 || i.alumnoActivo === null || i.alumnoActivo === false){
+            flag = true;
+          }
+        });
+        if(flag) {
+          message.error('El alumno seleccionado no está activo', 2.5);
+          return;
+        }
+      }
+      
       setSelectedRows(rowKeys);
       onChange(row);
     },
