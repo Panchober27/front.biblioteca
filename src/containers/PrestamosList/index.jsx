@@ -146,6 +146,18 @@ const PrestamosList = ({
         </div>
       ),
     },
+    {
+      title: 'ESTADO',
+      render: (row, record, index) => (
+        <div>
+          {record.ejemplar.estado
+            ? (
+              <p style={{fontSize: '11px'}}>{record.ejemplar.estado}</p>
+            )
+            : "no hay estado"}
+        </div>
+      ),
+    }
   ];
 
   // Opciones para la tabla de userPrestamos.
@@ -331,7 +343,7 @@ const PrestamosList = ({
           Ver Prestamos Data.
         </button>
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={16}>
             <SearchableTable
               columns={ejemplaresCols}
               dataSource={
@@ -339,7 +351,7 @@ const PrestamosList = ({
                   ? [...prestamoData.prestamoEjemplars]
                   : []
               }
-              rowKey="prestamoId"
+              rowKey="ejemplarId"
               onChange={(row) => {
                 setSelectedEjemeplares(row);
               }}
@@ -369,7 +381,7 @@ const PrestamosList = ({
               <p>No hay ejemplares seleccionados</p>
             )}
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <p>
               <b>Estado:</b> {prestamoData.estado}
             </p>

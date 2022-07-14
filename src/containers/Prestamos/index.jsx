@@ -86,6 +86,11 @@ const Prestamos = ({
       });
       MySwal.showLoading();
     } else if (prestamos.onErrorFetch) {
+      MySwal.fire({
+        title: "Error",
+        icon: "error",
+        text: "No se pudo crear el prestamo",
+      });
       clearPrestamoState();
     }
   }, [prestamos]);
@@ -242,7 +247,10 @@ const Prestamos = ({
                             ...prevData,
                             libros: prevData.libros.map((l) => {
                               if (l.libroId === libro.libroId) {
+                                const date = moment(value).format("DD-MM-YYYY");
                                 l.fechaRetorno = value;
+                                l.ejemplars[0].fechaFin = value;
+                                console.log(l.ejemplars[0].fechaFin);
                               }
                               return l;
                             }),
