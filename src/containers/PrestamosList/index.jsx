@@ -5,6 +5,11 @@ import {
   clearUserPrestamosState,
 } from '../../redux/reducers/userPrestamosReducer';
 
+import {
+  clearPrestamoState,
+} from "../../redux/reducers/prestamosReducer";
+
+
 import { useHistory } from "react-router-dom";
 import {
   InputField,
@@ -22,9 +27,11 @@ import { AiOutlineFileDone } from "react-icons/ai";
 import moment from "moment";
 
 const PrestamosList = ({
+  prestamos,
   userPrestamos,
   getPrestamosOfLoggedUser,
-  clearPrestamosState,
+  clearPrestamoState,
+  clearUserPrestamosState,
 }) => {
   const MySwal = withReactContent(swal);
   const history = useHistory();
@@ -47,14 +54,15 @@ const PrestamosList = ({
   // Columnas para la tabla con multiples userPrestamos.🐱‍👤
   const columns = [
     { title: "Codigo", dataIndex: "prestamoId", key: "prestamoId" },
-    { title: "Ejemplares", dataIndex: "ejemplares", key: "ejemplares" },
+    // { title: "Ejemplares", dataIndex: "ejemplares", key: "ejemplares" },
     {
       title: "Alumno",
       dataIndex: ["alumno", "nombreAlumno"],
       key: "alumno.nombres",
     },
+    { title: "Fecha Inicio", dataIndex: "fechaInicio", key: "fechaInicio" },
+    { title: 'Fecha Fin', dataIndex: 'fechaFin', key: 'fechaFin' },
     { title: "Estado", dataIndex: "estado", key: "estado" },
-    { title: "Dias atraso", dataIndex: "diasAtraso", key: "diasAtraso" },
     {
       title: "Acciones",
       dataIndex: "acciones",
@@ -155,6 +163,7 @@ const PrestamosList = ({
   // HOOKS DE EFECTO
   useEffect(() => {
     getPrestamosOfLoggedUser();
+    clearPrestamoState();
   }, []);
 
   useEffect(() => {
@@ -171,7 +180,8 @@ const PrestamosList = ({
   // Hook de efecto final: resetear los datos necesarios.
   useEffect(() => {
     return () => {
-      clearPrestamosState();
+      // clearPrestamosState();
+      clearUserPrestamosState();
     };
   }, []);
 
@@ -413,13 +423,15 @@ const PrestamosList = ({
   );
 };
 
-const mapStateToProps = ({ userPrestamos }) => ({
+const mapStateToProps = ({ userPrestamos, prestamos }) => ({
   userPrestamos,
+  prestamos,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getPrestamosOfLoggedUser: () => dispatch(getPrestamosOfLoggedUser()),
   clearUserPrestamosState: () => dispatch(clearUserPrestamosState()),
+  clearPrestamoState: () => dispatch(clearPrestamoState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PrestamosList);
