@@ -16,7 +16,8 @@
     "eject": "react-app-rewired eject",
     "electron:serve": "concurrently -k \"cross-env BROWSER=none npm run start\" \"npm run electron:start\"",
     "electron:build": "npm run build && electron-builder -c.extraMetadata.main=build/main.js",
-    "electron:start": "wait-on tcp:3000 && electron ."
+    "electron:start": "wait-on tcp:3000 && electron .",
+    "docs": "jsdoc -c jsdoc.json"
   },
   "build": {
     "extends": null,
@@ -45,6 +46,7 @@
     "@testing-library/user-event": "^12.8.3",
     "antd": "^4.17.2",
     "axios": "^0.21.1",
+    "better-docs": "^2.7.2",
     "bootstrap": "^4.5.3",
     "chart.js": "^2.9.4",
     "classnames": "^2.2.6",
@@ -57,6 +59,7 @@
     "firebase": "^9.1.0",
     "i18next": "^19.8.4",
     "immutability-helper": "^3.1.1",
+    "jsdoc": "^3.6.10",
     "jsonwebtoken": "^8.5.1",
     "lodash.range": "^3.2.0",
     "mdi-react": "^7.4.0",

@@ -7,6 +7,9 @@
 node_modules/
 dist/
 
+# Ignore jsdocs
+docs/
+
 # Compiled Java class files
 *.class
 

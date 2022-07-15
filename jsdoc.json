@@ -1,0 +1,35 @@
+{
+    "tags": {
+      "allowUnknownTags": ["true"]
+    },
+    "plugins": ["node_modules/better-docs/typescript"],
+    "source": {
+      "include": ["src"],
+      "includePattern": "\\.(jsx|js|ts|tsx)$",
+      "excludePattern": "(node_modules|docs)"
+    },
+    "templates": {
+      "cleverLinks": false,
+      "monospaceLinks": false,
+      "search": true,
+      "better-docs": {
+        "name": "React biblioteca",
+        "logo": "https://raw.githubusercontent.com/better-docs/better-docs/master/docs/assets/logo.png",
+        "url": "https://better-docs.netlify.app/",
+        "hideGenerator": false,
+        "navlinks": [
+          {
+            "label": "Repositorio del proyecto.",
+            "url": "https://github.com/Panchober27/front.biblioteca"
+          }
+        ]
+      }
+    },
+    "opts": {
+      "template": "node_modules/better-docs",
+      "recurse": "true",
+      "destination": "./docs",
+      "readme": "./README.md"
+    }
+  }
+  
