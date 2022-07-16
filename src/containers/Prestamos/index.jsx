@@ -174,7 +174,7 @@ const Prestamos = ({
           console.log(prestamoData);
           const fechaDevolucion = prestamoData.libros.reduce((fechaDev, l) => {
             console.log(l.fechaRetorno)
-            const fecha = moment(l.fechaRetorno, "DD-MM-YYYY").valueOf()
+            const fecha = moment(l.fechaRetorno, "YYYY-MM-DD").valueOf()
             return fecha > fechaDev ? fecha : fechaDev
           }, 0)
           console.log(moment(fechaDevolucion).format("DD-MM-YYYY"))

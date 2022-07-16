@@ -122,7 +122,7 @@ const PrestamosList = ({
         <div>
           {record.ejemplar.libro.nombre
             ? record.ejemplar.libro.nombre
-            : "no hay"}
+            : "no hay fecha"}
         </div>
       ),
     },
