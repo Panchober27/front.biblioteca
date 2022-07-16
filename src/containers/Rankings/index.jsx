@@ -1,9 +1,13 @@
 import React, { Fragment, useState, useEffect, Row, Col } from "react";
-import { Collapse } from "antd";
+import { Collapse, Tabs, Button } from "antd";
 import { UserData } from "./Data";
 import { BarChart, LineChart, PieChart } from "../../components/charts";
+import { InputField, DatePickerField } from "../../components/common";
+import swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 const Rankings = () => {
   const { Panel } = Collapse;
+  const { TabPane } = Tabs;
 
   const [userData, setUserData] = useState({
     labels: UserData.map((user) => user.year),
@@ -36,28 +40,101 @@ const Rankings = () => {
           header={<h4>Alumnos.</h4>}
         >
           <div className="card">
-            <div className="card-body">
-              <p className="card-text">
-                Probar grafico de barras sin librería. <br />
-                el grafico se encuantra en este link. <br />
+            <div
+              className="card-body"
+              style={{ display: "flex", justifyContent: "space-around" }}
+            >
+              <div>
+                <div className="form-group">
+                  <InputField
+                    label="Alumno"
+                    name="alumno"
+                    type="text"
+                    placeholder="Ingrese el nombre del alumno"
+                    onChange={(e) => {}}
+                  />
+
+                  <DatePickerField
+                    label="Fecha"
+                    name="fecha"
+                    placeholder="Desde"
+                    onChange={(e) => {}}
+                  />
+                  <DatePickerField
+                    label="Fecha"
+                    name="fecha"
+                    placeholder="Hasta"
+                    onChange={(e) => {}}
+                  />
+
+                  <Button
+                    type="primary"
+                    style={{ marginLeft: "20px" }}
+                    onClick={() => {
+                      const MySwal = withReactContent(swal);
+                      MySwal.fire({
+                        title: "Buscar data",
+                        text: "¿Estas seguro de buscar la data?",
+                        icon: "info",
+                        showCancelButton: false,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Si, buscar!",
+                        cancelButtonText: "Cancelar",
+                      }).then((result) => {
+                        if (result.value) {
+                          MySwal.fire("Buscando data...", "", "info");
+                          MySwal.showLoading();
+                          setTimeout(() => {
+                            MySwal.close();
+                          }, 2000);
+                        }
+                      });
+                    }}
+                  >
+                    Buscar
+                  </Button>
+                </div>
+
+                <Tabs>
+                  <TabPane tab="Bar Chart" key="1">
+                    <div style={{ width: "500px" }}>
+                      <BarChart chartData={userData} />
+                    </div>
+                  </TabPane>
+                  <TabPane tab="Line Chart" key="2">
+                    <div style={{ width: "500px" }}>
+                      <LineChart chartData={userData} />
+                    </div>
+                  </TabPane>
+                  <TabPane tab="Pie Chart" key="3">
+                    <div style={{ width: "500px" }}>
+                      <PieChart chartData={userData} />
+                    </div>
+                  </TabPane>
+                </Tabs>
+              </div>
+
+              <p className="card-text" style={{ width: "420px" }}>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ut
+                labore corporis aspernatur voluptate magni? Quas doloremque
+                illum obcaecati sint ullam molestiae amet error aliquid
+                aspernatur, modi commodi ex, iure inventore odio? Eaque
+                laudantium vero voluptate assumenda minima eos et rem illo
+                reiciendis a accusamus corporis enim laboriosam voluptatum ipsam
+                beatae sed alias, laborum explicabo quo quae similique
+                consequatur pariatur. Sunt voluptatum a inventore repudiandae,
+                voluptates ullam perferendis provident sit maxime at! Eligendi
+                aperiam accusamus voluptatibus veritatis harum animi, repellat
+                blanditiis quibusdam unde illo laudantium amet impedit, tenetur
+                autem. Qui, quia esse. Sunt perferendis, cupiditate culpa
+                provident voluptatum, accusamus iure illum ducimus est
+                repudiandae dicta numquam nemo nam blanditiis architecto quia
+                ipsa quos velit! Voluptatibus molestiae necessitatibus sed
+                nostrum sapiente dicta repellendus quos atque eos?
               </p>
             </div>
           </div>
-          <br />
-
-
-          <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
-            <div style={{ width: "500px" }}>
-              <BarChart chartData={userData} />
-            </div>
-            <div style={{ width: "500px" }}>
-              <LineChart chartData={userData} />
-            </div>
-            <div style={{ width: "500px" }}>
-              <PieChart chartData={userData} />
-            </div>
-          </div>
-
         </Panel>
 
         <Panel

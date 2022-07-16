@@ -11,3 +11,4 @@ export { default as ejemplaresReducer } from './ejemplaresReducer';
 export { default as alumnos } from './alumnosReducer';
 export { default as uploads } from './uploadsReducer';
 export {default as userPrestamos} from './userPrestamosReducer';
+export { default as rankings} from './rankingsReducer';
