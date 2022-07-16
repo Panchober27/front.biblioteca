@@ -9,6 +9,14 @@ export const createPrestamo = (body) =>
     errorMessage: "Error al cargar prestamo",
   });
 
+export const updatePrestamo = (id, body) =>
+  reducer.put({
+    id,
+    body,
+    loadingMessage: "Actualizando prestamo...",
+    errorMessage: "Error al actualizar prestamo",
+  });
+
 export const clearPrestamoState = () => reducer.clearState();
 
 export default reducer.reducer;

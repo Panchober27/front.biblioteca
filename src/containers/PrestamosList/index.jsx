@@ -7,6 +7,7 @@ import {
 
 import {
   clearPrestamoState,
+  updatePrestamo,
 } from "../../redux/reducers/prestamosReducer";
 
 
@@ -23,11 +24,11 @@ import swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { VscPreview } from "react-icons/vsc";
 import { AiOutlineFileDone } from "react-icons/ai";
-// importar moment
 import moment from "moment";
 
 const PrestamosList = ({
   prestamos,
+  updatePrestamo,
   userPrestamos,
   getPrestamosOfLoggedUser,
   clearPrestamoState,
@@ -50,6 +51,41 @@ const PrestamosList = ({
   // Hook de estado para arreglo de ejemplares que se les realizara una devolucion.
   // caso de uso: alumno retorna 2 libros de un prestamo, usuario selecciona esos libros y se guardan en este hook.
   const [selectedEjemplares, setSelectedEjemeplares] = useState([{}]);
+
+
+
+
+  // Hooks de Efecto para peticion para crear un prestamo.
+  useEffect(() => {
+    if (prestamos.onSuccessPostPutFetch) {
+      MySwal.fire({
+        title: "OK",
+        text: "El prestamo se edito correctamente",
+        icon: "success",
+        confirmButtonText: "Ok",
+      });
+      clearPrestamoState();
+      history.push("/prestamos");
+    } else if (prestamos.onStartFetch) {
+      MySwal.fire({
+        title: "Creando Prestamo",
+        icon: "success",
+      });
+      MySwal.showLoading();
+    } else if (prestamos.onErrorFetch) {
+      MySwal.fire({
+        title: "Error",
+        icon: "error",
+        text: "No se pudo crear el prestamo",
+      });
+      clearPrestamoState();
+    }
+  }, [prestamos]);
+
+
+
+
+
 
   // Columnas para la tabla con multiples userPrestamos.🐱‍👤
   const columns = [
@@ -314,18 +350,35 @@ const PrestamosList = ({
                 // alert('new button');
                 MySwal.fire({
                   title: "Actualizar Prestamo",
-                  text: "Crear validacion, en caso de que e entreguen todos o el ultimo ejemplar!🐱‍👤",
+                  text: "Revisar en el backend la logica de esto, ya que tiene fallas!!!",
                   icon: "warning",
                   showCancelButton: true,
                   confirmButtonColor: "#3085d6",
                   cancelButtonColor: "#d33",
-                  confirmButtonText: "Si, realizar devolución!",
+                  confirmButtonText: "Si, Ir a revisar!!",
                   cancelButtonText: "Cancelar",
                 }).then((result) => {
                   if (result.value) {
                     // TODO: Realizar devoluciones de ejemplares.
                     // usar contador de array de ejemplares???
                     // cuando el contador llegue a 0, se termina el prestamo🐱‍👤.
+
+                    console.log(`id del prestamo para enviarlo por la url: ${prestamoData.prestamoId}`);
+                    console.log('selectedEjemplares');
+                    console.log(selectedEjemplares);
+
+
+                    // TODO: Validar que el usuario haya seleccionado al menos un ejemplar.
+
+                    const ejemplares = selectedEjemplares.map((ejemplar) => {
+                      return ejemplar;
+                    });
+
+                    console.log('ejemplares');
+                    console.log(ejemplares);
+
+                    // updatePrestamo(prestamoData.prestamoId, ejemplares);
+                    
                   }
                 });
               }}
@@ -443,6 +496,14 @@ const mapStateToProps = ({ userPrestamos, prestamos }) => ({
 const mapDispatchToProps = (dispatch) => ({
   getPrestamosOfLoggedUser: () => dispatch(getPrestamosOfLoggedUser()),
   clearUserPrestamosState: () => dispatch(clearUserPrestamosState()),
+  
+  // TODO: revisar el objeto? que se envia como parametro al reducer
+  
+  // updatePrestamo: (ejemplares, iddelprestamo)
+  updatePrestamo: (id, ejemplares) => dispatch(updatePrestamo(id, ejemplares)),
+  
+
+  
   clearPrestamoState: () => dispatch(clearPrestamoState()),
 });
 
