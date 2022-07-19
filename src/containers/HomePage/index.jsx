@@ -5,6 +5,9 @@ import { Button, Carousel, Row, Col, Tooltip, Modal } from "antd";
 // importar moment para trabajar con fechas
 import moment from "moment";
 
+import foto from '../../shared/img/fondoBiblioteca.png'
+import foto1 from '../../shared/img/fondoBiblioteca1.png'
+
 import { getUploads } from "../../redux/reducers/uploadsReducer";
 
 import swal from "sweetalert2";
@@ -14,6 +17,7 @@ import { VscPreview } from "react-icons/vsc";
 import { AiOutlineFileDone } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import axios from "axios";
+
 
 const HomePage = () => {
   // Desestructurando objetos desde reducers.
@@ -37,62 +41,48 @@ const HomePage = () => {
   return (
     <>
       <h1>HomePage</h1>
-      {/* <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <Carousel
-          autoplay
-          style={{ width: "50%" }}
-          effect="fade"
-        >
-          <div style={{}}>
-            <h3 style={contentStyle}>1</h3>
+      <div>
+        <Carousel autoplay autoplaySpeed={1000} style={{width: '100%'}} >
+          <div className="col-sm-12" style={{position: 'relative', border: '2px solid green'}}>
+            <img src={foto}/>
           </div>
-          <div style={{}}>
-            <h3 style={contentStyle}>2</h3>
-          </div>
-          <div style={{}}>
-            <h3 style={contentStyle}>3</h3>
-          </div>
+          <div className="col-sm-12" style={{position: 'relative', border: '2px solid blue'}}>
+            <img src={foto1} />
+          </div  >
         </Carousel>
-      </div> */}
-
-      <p style={{ textAlign: "center" }}>
-        Demo para subir archivo al servidor <br />
-        el servidor lee estos archivos y actualiza la base de datos.
-      </p>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "100px",
-        }}
-      >
-        <input
-          type="file"
-          name="files"
-          id="iput-file"
-          multiple
-        />
-        <button type="button">
-          Subir
-        </button>
       </div>
 
-      {/* <div className='container-fluid'>
-        <div className='row'>
-            <ul>
-              <li>Listar</li>
-              <li>Solicitar Prestamos</li>
-              <li>Realizar Devoluciones</li>
-              <li>Otras Acciones a realizar.</li>
-            </ul>
+      <div className="container">
+        <div className="row">
+        <div className="col-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Titulo</h5>
+              <button onClick={() => history.push('cePrestamo')}>GENERAR PRESTAMO!</button>
+
+            </div>
+          </div>
         </div>
-      </div> */}
+        <div className="col-4">
+          <div className="card">
+            <div className="card-body" style={{backgroundColor: 'lightgreen'}}>
+              <h5 className="card-title">Titulo</h5>
+                <button>VER DATOS</button>
+            </div>
+          </div>
+        </div>
+        <div className="col-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Titulo</h5>
+                <button>REALIZAR DEVOLUCION</button>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+  
+
     </>
   );
 };
