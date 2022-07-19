@@ -346,6 +346,7 @@ const PrestamosList = ({
             >
               Cerrar
             </Button>
+
             <Button
               type="primary"
               onClick={() => {
@@ -353,6 +354,38 @@ const PrestamosList = ({
                 MySwal.fire({
                   title: "Actualizar Prestamo",
                   text: `Revisar en el backend la logica de esto, ya que tiene fallas!!!`,
+                  // html:
+                  //   "You can use <b>bold text</b>, " +
+                  //   '<a href="//sweetalert2.github.io">links</a> ' +
+                  //   "and other HTML tags",
+                  html: `<div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">Ojbeto</h5>
+                    <p className="card-text">
+                      <b>Codigo:</b>{" "}
+                      ${prestamoData.prestamoId ? prestamoData.prestamoId : "----"}
+                      <br />
+                      <b>Alumno:</b>{" "}
+                      ${prestamoData.alumno && prestamoData.alumno.nombreAlumno
+                        ? prestamoData.alumno.nombreAlumno
+                        : "----"}
+                      <br />
+                      <b>Estado:</b>{" "}
+                      ${prestamoData.estado ? prestamoData.estado : "----"}
+                      <br />
+                      <b>Fecha Inicio:</b>{" "}
+                      ${prestamoData.fechaInicio
+                        ? moment(prestamoData.fechaInicio).format("DD-MM-YYYY")
+                        : "----"}
+                      <br />
+                      <b>Fecha Termino:</b>{" "}
+                      ${prestamoData.fechaFin
+                        ? moment(prestamoData.fechaFin).format("DD-MM-YYYY")
+                        : "----"}
+                    </p>
+                  </div>
+                </div>`,
+
                   icon: "warning",
                   showCancelButton: true,
                   confirmButtonColor: "#3085d6",
@@ -380,7 +413,7 @@ const PrestamosList = ({
                     console.log("ejemplares");
                     console.log(ejemplares);
 
-                    // updatePrestamo(prestamoData.prestamoId, ejemplares);
+                    updatePrestamo(prestamoData.prestamoId, ejemplares);
                   }
                 });
               }}
