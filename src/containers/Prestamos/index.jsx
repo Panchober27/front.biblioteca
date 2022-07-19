@@ -272,8 +272,7 @@ const Prestamos = ({
             }}
           >
             <Tooltip title="Ver en consola objeto final">
-              <Button
-                style={{ backgroundColor: "lightgreen" }}
+              <Button shape="round" type="primary"
                 onClick={() => {
                   setPrestamoData({
                     ...prestamoData,

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Calendario from "./Calendario";
+import "antd/dist/antd.css";
 import { Button, Carousel, Row, Col, Tooltip, Modal } from "antd";
 // importar moment para trabajar con fechas
 import moment from "moment";
 
 import foto from '../../shared/img/fondoBiblioteca.png'
 import foto1 from '../../shared/img/fondoBiblioteca1.png'
+import foto2 from '../../shared/img/libro.jpg'
 
 import { getUploads } from "../../redux/reducers/uploadsReducer";
 
@@ -27,30 +29,22 @@ const HomePage = () => {
   const MySwal = withReactContent(swal);
   const history = useHistory();
 
-
-  const contentStyle = {
-    height: '160px',
-    color: '#fff',
-    lineHeight: '160px',
-    textAlign: 'center',
-    background: '#364d79',
-  };
-
-
-
   return (
     <>
       <h1>HomePage</h1>
-      <div>
-        <Carousel autoplay autoplaySpeed={1000} style={{width: '100%'}} >
-          <div className="col-sm-12" style={{position: 'relative', border: '2px solid green'}}>
-            <img src={foto}/>
+     
+      <div align="center" style={{border: '2px solid #b3e5fc', display: 'block',width: '100%',}}>
+      <>
+        <Carousel className="carusel" autoplay autoplaySpeed={1000} style={{width: '75%', }}>
+        <div  style={{width: '100%', }}>
+              <img src={foto}/>
           </div>
-          <div className="col-sm-12" style={{position: 'relative', border: '2px solid blue'}}>
-            <img src={foto1} />
-          </div  >
+          <div >    
+              <img src={foto1} />
+          </div>
         </Carousel>
-      </div>
+      </>
+    </div>
 
       <div className="container">
         <div className="row">
@@ -58,16 +52,7 @@ const HomePage = () => {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">Titulo</h5>
-              <button onClick={() => history.push('cePrestamo')}>GENERAR PRESTAMO!</button>
-
-            </div>
-          </div>
-        </div>
-        <div className="col-4">
-          <div className="card">
-            <div className="card-body" style={{backgroundColor: 'lightgreen'}}>
-              <h5 className="card-title">Titulo</h5>
-                <button>VER DATOS</button>
+              <Button shape="round" type="primary" onClick={() => history.push('cePrestamo')}>GENERAR PRÉSTAMO!</Button>
             </div>
           </div>
         </div>
@@ -75,7 +60,15 @@ const HomePage = () => {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">Titulo</h5>
-                <button>REALIZAR DEVOLUCION</button>
+              <Button shape="round" type="primary">VER DATOS</Button>
+            </div>
+          </div>
+        </div>
+        <div className="col-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Titulo</h5>
+              <Button shape="default" type="primary">REALIZAR DEVOLUCIÓN</Button>
             </div>
           </div>
         </div>
