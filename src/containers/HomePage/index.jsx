@@ -9,14 +9,12 @@ import foto from '../../shared/img/fondoBiblioteca.png'
 import foto1 from '../../shared/img/fondoBiblioteca1.png'
 
 import { getUploads } from "../../redux/reducers/uploadsReducer";
-
 import swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useHistory } from "react-router-dom";
 import { VscPreview } from "react-icons/vsc";
 import { AiOutlineFileDone } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
-import axios from "axios";
 
 
 const HomePage = () => {
@@ -27,16 +25,13 @@ const HomePage = () => {
   const MySwal = withReactContent(swal);
   const history = useHistory();
 
-
-  const contentStyle = {
-    height: '160px',
-    color: '#fff',
-    lineHeight: '160px',
-    textAlign: 'center',
-    background: '#364d79',
-  };
-
-
+  // const contentStyle = {
+  //   height: '160px',
+  //   color: '#fff',
+  //   lineHeight: '160px',
+  //   textAlign: 'center',
+  //   background: '#364d79',
+  // };
 
   return (
     <>

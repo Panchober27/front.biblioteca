@@ -3,13 +3,12 @@ import { connect } from "react-redux";
 import {
   getPrestamosOfLoggedUser,
   clearUserPrestamosState,
-} from '../../redux/reducers/userPrestamosReducer';
+} from "../../redux/reducers/userPrestamosReducer";
 
 import {
   clearPrestamoState,
   updatePrestamo,
 } from "../../redux/reducers/prestamosReducer";
-
 
 import { useHistory } from "react-router-dom";
 import {
@@ -52,9 +51,6 @@ const PrestamosList = ({
   // caso de uso: alumno retorna 2 libros de un prestamo, usuario selecciona esos libros y se guardan en este hook.
   const [selectedEjemplares, setSelectedEjemeplares] = useState([{}]);
 
-
-
-
   // Hooks de Efecto para peticion para crear un prestamo.
   useEffect(() => {
     if (prestamos.onSuccessPostPutFetch) {
@@ -82,11 +78,6 @@ const PrestamosList = ({
     }
   }, [prestamos]);
 
-
-
-
-
-
   // Columnas para la tabla con multiples userPrestamos.🐱‍👤
   const columns = [
     { title: "Codigo", dataIndex: "prestamoId", key: "prestamoId" },
@@ -97,8 +88,19 @@ const PrestamosList = ({
       key: "alumno.nombres",
     },
     { title: "Fecha Inicio", dataIndex: "fechaInicio", key: "fechaInicio" },
-    { title: 'Fecha Fin', dataIndex: 'fechaFin', key: 'fechaFin' },
+    { title: "Fecha Fin", dataIndex: "fechaFin", key: "fechaFin" },
     { title: "Estado", dataIndex: "estado", key: "estado" },
+    {
+      title: "Usuario",
+      render: (text, record) => (
+        <span>
+          {record.usuario && record.usuario.nombre && record.usuario.apellido
+            ? `${record.usuario.nombre} ${record.usuario.apellido}`
+            : "No asignado"}
+        </span>
+      ),
+      key: "Usuario",
+    },
     {
       title: "Acciones",
       dataIndex: "acciones",
@@ -183,17 +185,17 @@ const PrestamosList = ({
       ),
     },
     {
-      title: 'ESTADO',
+      title: "ESTADO",
       render: (row, record, index) => (
         <div>
-          {record.ejemplar.estado
-            ? (
-              <p style={{fontSize: '11px'}}>{record.ejemplar.estado}</p>
-            )
-            : "no hay estado"}
+          {record.ejemplar.estado ? (
+            <p style={{ fontSize: "11px" }}>{record.ejemplar.estado}</p>
+          ) : (
+            "no hay estado"
+          )}
         </div>
       ),
-    }
+    },
   ];
 
   // Opciones para la tabla de userPrestamos.
@@ -350,7 +352,7 @@ const PrestamosList = ({
                 // alert('new button');
                 MySwal.fire({
                   title: "Actualizar Prestamo",
-                  text: "Revisar en el backend la logica de esto, ya que tiene fallas!!!",
+                  text: `Revisar en el backend la logica de esto, ya que tiene fallas!!!`,
                   icon: "warning",
                   showCancelButton: true,
                   confirmButtonColor: "#3085d6",
@@ -363,10 +365,11 @@ const PrestamosList = ({
                     // usar contador de array de ejemplares???
                     // cuando el contador llegue a 0, se termina el prestamo🐱‍👤.
 
-                    console.log(`id del prestamo para enviarlo por la url: ${prestamoData.prestamoId}`);
-                    console.log('selectedEjemplares');
+                    console.log(
+                      `id del prestamo para enviarlo por la url: ${prestamoData.prestamoId}`
+                    );
+                    console.log("selectedEjemplares");
                     console.log(selectedEjemplares);
-
 
                     // TODO: Validar que el usuario haya seleccionado al menos un ejemplar.
 
@@ -374,11 +377,10 @@ const PrestamosList = ({
                       return ejemplar;
                     });
 
-                    console.log('ejemplares');
+                    console.log("ejemplares");
                     console.log(ejemplares);
 
                     // updatePrestamo(prestamoData.prestamoId, ejemplares);
-                    
                   }
                 });
               }}
@@ -496,14 +498,12 @@ const mapStateToProps = ({ userPrestamos, prestamos }) => ({
 const mapDispatchToProps = (dispatch) => ({
   getPrestamosOfLoggedUser: () => dispatch(getPrestamosOfLoggedUser()),
   clearUserPrestamosState: () => dispatch(clearUserPrestamosState()),
-  
+
   // TODO: revisar el objeto? que se envia como parametro al reducer
-  
+
   // updatePrestamo: (ejemplares, iddelprestamo)
   updatePrestamo: (id, ejemplares) => dispatch(updatePrestamo(id, ejemplares)),
-  
 
-  
   clearPrestamoState: () => dispatch(clearPrestamoState()),
 });
 
