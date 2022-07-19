@@ -74,7 +74,7 @@ const HomePage = () => {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">Titulo</h5>
-              <Button shape="default" type="primary">REALIZAR DEVOLUCIÓN</Button>
+              <Button shape="round" type="primary">REALIZAR DEVOLUCIÓN</Button>
             </div>
           </div>
         </div>
