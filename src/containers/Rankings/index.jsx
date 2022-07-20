@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect, Row, Col } from "react";
 import { Collapse, Tabs, Button } from "antd";
 import { UserData } from "./Data";
+import { carrerasData } from "./carrerasData";
 import { BarChart, LineChart, PieChart } from "../../components/charts";
 import { InputField, DatePickerField } from "../../components/common";
 import swal from "sweetalert2";
@@ -27,6 +28,45 @@ const Rankings = () => {
       },
     ],
   });
+
+  // constante para la data del grafico delas carreras.
+  const [carrData, setCarrData] = useState({
+    labels: carrerasData.map((carrera) => carrera.name),
+    datasets: [
+      {
+        label: "Ranking Atrasos Carreras",
+        data: carrerasData.map((carrera) => carrera.atrasos),
+        backgroundColor: [
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+        ],
+        borderColor: "black",
+        borderWidth: 2,
+      },
+    ],
+  });
+
+  // opciones para el grafico!
+  const options = {
+    animations: {
+      tension: {
+        duration: 1000,
+        easing: 'linear',
+        from: 1,
+        to: 0,
+        loop: true
+      }
+    },
+    scales: {
+      y: {
+        // defining min and max so hiding the dataset does not change scale range
+        min: 0,
+        max: 25,
+      },
+    },
+  };
 
   return (
     <>
@@ -150,22 +190,27 @@ const Rankings = () => {
         </Panel>
       </Collapse>
 
-
       <div className="container">
         <div className="row">
           <div className="col-6">
-            Carreras con mas atrasados en las ultimas semanas.
-            GRAFICO RAPIDOOO!!
-
-
-
+            Carreras con mas atrasados en las ultimas semanas. GRAFICO
+            RAPIDOOO!!
+            <BarChart chartData={carrData} chartOptions={options} />
+            {/* <PieChart chartData={carrData} /> */}
+            {/* <LineChart chartData={carrData} chartOptions={options} /> */}
           </div>
-          <div className="col-6"></div>
+          <div className="col-6">
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Titulo</h5>
+                <p className="card-text">
+                  Solicite reporte sobre libros, carreras, etc...
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-
-
     </>
   );
 };

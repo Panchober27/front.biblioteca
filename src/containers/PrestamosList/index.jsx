@@ -515,7 +515,7 @@ const PrestamosList = ({
 
   return (
     <>
-      <h2>Nueva vista de userPrestamos.</h2>
+      <h4>Prestamos.</h4>
       <AdministrationTable
         size="small"
         columns={columns}
