@@ -2,9 +2,8 @@ import fetchReducer from "./fetchReducer";
 
 const reducer = fetchReducer("rankings");
 
-export const getCountLibroXMes = (body) =>
-  reducer.post({
-    body,
+export const getCountLibroXMes = () =>
+  reducer.get({
     loadingMessage: "Cargando datos...",
     errorMessage: "Error al cargar datos",
   });

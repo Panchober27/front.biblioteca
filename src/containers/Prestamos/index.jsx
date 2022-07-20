@@ -271,7 +271,7 @@ const Prestamos = ({
               marginRight: "175px",
             }}
           >
-            <Tooltip title="Ver en consola objeto final">
+            <Tooltip title="Generar Nuevo Prestamo">
               <Button shape="round" type="primary"
                 onClick={() => {
                   setPrestamoData({

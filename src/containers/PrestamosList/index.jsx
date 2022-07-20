@@ -91,6 +91,18 @@ const PrestamosList = ({
     { title: "Fecha Fin", dataIndex: "fechaFin", key: "fechaFin" },
     { title: "Estado", dataIndex: "estado", key: "estado" },
     {
+      title: "Fecha Cierre",
+      render: (text, record) => (
+        <span>
+          {
+            record.fechaTermino ?
+              moment(record.fechaTermino).format("DD/MM/YYYY") :
+              "-"
+          }
+        </span>
+      )
+    },
+    {
       title: "Usuario",
       render: (text, record) => (
         <span>

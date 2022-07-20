@@ -149,6 +149,23 @@ const Rankings = () => {
           </p>
         </Panel>
       </Collapse>
+
+
+      <div className="container">
+        <div className="row">
+          <div className="col-6">
+            Carreras con mas atrasados en las ultimas semanas.
+            GRAFICO RAPIDOOO!!
+
+
+
+          </div>
+          <div className="col-6"></div>
+        </div>
+      </div>
+
+
+
     </>
   );
 };

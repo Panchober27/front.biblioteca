@@ -37,16 +37,16 @@ const HomePage = () => {
 
   return (
     <>
-      <h1>HomePage</h1>
+      {/* <h1>HomePage</h1> */}
      
-      <div align="center" style={{border: '2px solid #b3e5fc', display: 'block',width: '100%',}}>
+      <div align="center" style={{display: 'block',width: '100%',}}>
       <>
-        <Carousel className="carusel" autoplay autoplaySpeed={1000} style={{width: '75%', }}>
+        <Carousel className="carusel" autoplay autoplaySpeed={1000} style={{width: '75%', borderRadius: '20px' }}>
         <div  style={{width: '100%', }}>
-              <img src={foto}/>
+              <img src={foto} style={{borderRadius: '20px'}}/>
           </div>
           <div >    
-              <img src={foto1} />
+              <img src={foto1} style={{borderRadius: '20px'}}/>
           </div>
         </Carousel>
       </>
