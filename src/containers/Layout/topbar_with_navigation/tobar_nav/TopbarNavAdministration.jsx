@@ -24,7 +24,7 @@ const TopbarNavAdministration = ({ users, clearPermissionsState }) => {
       <DropdownMenu className='topbar__nav-dropdown-menu dropdown__menu'>
       
       <DropdownItem>
-        <TopbarNavLink title='Prestar Libros' route='/prestamos' />
+        <TopbarNavLink title='Prestar Libros' route='/cePrestamos' />
       </DropdownItem>
       
       <DropdownItem>

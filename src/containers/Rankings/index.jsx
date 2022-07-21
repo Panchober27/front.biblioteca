@@ -203,7 +203,29 @@ const Rankings = () => {
               <div className="card-body">
                 <h5 className="card-title">Titulo</h5>
                 <p className="card-text">
-                  Solicite reporte sobre libros, carreras, etc...
+                  Solicite reporte sobre libros, carreras, etc... <br/>
+                  <Button type="primary" onClick={() => {
+                    const MySwal = withReactContent(swal);
+                    MySwal.fire({
+                      title: "Buscar data",
+                      text: "Esto será parte de una actualización futura...",
+                      icon: "info",
+                      showCancelButton: false,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Si, buscar!",
+                      cancelButtonText: "Cancelar",
+                    }).then((result) => {
+                      if (result.value) {
+                        MySwal.fire("Buscando data...", "", "info");
+                        MySwal.showLoading();
+                        setTimeout(() => {
+                          MySwal.close();
+                        }, 2000);
+                      }
+                    });
+                  }
+                  }>Recargar</Button>
                 </p>
               </div>
             </div>
