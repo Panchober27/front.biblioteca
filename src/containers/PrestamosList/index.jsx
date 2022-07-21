@@ -62,6 +62,7 @@ const PrestamosList = ({
       });
       setDevolucionesModalVisible(false);
       clearPrestamoState();
+      getPrestamosOfLoggedUser();
       history.push("/prestamos");
     } else if (prestamos.onStartFetch) {
       MySwal.fire({
@@ -183,7 +184,7 @@ const PrestamosList = ({
         <div>
           {record.ejemplar.fechaEntrega
             ? record.ejemplar.fechaEntrega
-            : "no hay fecha"}
+            : "FINALIZADO"}
         </div>
       ),
     },
@@ -193,7 +194,7 @@ const PrestamosList = ({
         <div>
           {record.ejemplar.fechaFin
             ? record.ejemplar.fechaFin
-            : "no hay fecha!"}
+            : "FINALIZADO"}
         </div>
       ),
     },
@@ -204,7 +205,7 @@ const PrestamosList = ({
           {record.ejemplar.estado ? (
             <p style={{ fontSize: "11px" }}>{record.ejemplar.estado}</p>
           ) : (
-            "no hay estado"
+            "FINALIZADO"
           )}
         </div>
       ),
