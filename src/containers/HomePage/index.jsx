@@ -48,22 +48,26 @@ const HomePage = () => {
           >
             <div style={{ width: '100%' }}>
               <span
-                style={{ 
+                style={{
                   fontSize: '50px',
                   color: 'lightblue',
                   fontWeight: 'bold',
                 }}
-              >Todo Sobre Futuras Características</span>
+              >
+                Todo Sobre Futuras Características
+              </span>
               <img src={foto} style={{ borderRadius: '20px' }} />
             </div>
             <div>
-            <span
-                style={{ 
+              <span
+                style={{
                   fontSize: '50px',
                   color: 'lightblue',
                   fontWeight: 'bold',
                 }}
-              >Mayor y mejor gestión</span>
+              >
+                Mayor y mejor gestión
+              </span>
               <img src={foto1} style={{ borderRadius: '20px' }} />
             </div>
           </Carousel>
@@ -75,18 +79,19 @@ const HomePage = () => {
           <div className='col-4'>
             <div
               style={{
-                background: '#373B44' ,
+                borderRadius: '35px',
+                background: '#373B44',
                 background:
                   '-webkit-linear-gradient(to right, #4286f4, #373B44)',
-                background:
-                  'linear-gradient(to right, #4286f4, #373B44)',
+                background: 'linear-gradient(to right, #4286f4, #373B44)',
               }}
             ></div>
 
             <div
               className='card'
               style={{
-                background: '#2980B9' ,
+                borderRadius: '35px',
+                background: '#2980B9',
                 background:
                   '-webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9)',
                 background:
@@ -96,7 +101,8 @@ const HomePage = () => {
               <div
                 className='card-body'
                 style={{
-                  background: '#2980B9' ,
+                  borderRadius: '35px',
+                  background: '#2980B9',
                   background:
                     '-webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9)',
                   background:
@@ -118,7 +124,8 @@ const HomePage = () => {
             <div
               className='card'
               style={{
-                background: '#2980B9' ,
+                borderRadius: '35px',
+                background: '#2980B9',
                 background:
                   '-webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9)',
                 background:
@@ -128,6 +135,7 @@ const HomePage = () => {
               <div
                 className='card-body'
                 style={{
+                  borderRadius: '35px',
                   background: '#2980B9',
                   background:
                     '-webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9)',
@@ -150,7 +158,8 @@ const HomePage = () => {
             <div
               className='card'
               style={{
-                background: '#2980B9' ,
+                borderRadius: '35px',
+                background: '#2980B9',
                 background:
                   '-webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9)',
                 background:
@@ -160,7 +169,8 @@ const HomePage = () => {
               <div
                 className='card-body'
                 style={{
-                  background: '#2980B9' ,
+                  borderRadius: '35px',
+                  background: '#2980B9',
                   background:
                     '-webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9)',
                   background:

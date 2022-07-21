@@ -72,7 +72,7 @@ const Rankings = () => {
     <>
       <h1>Rankings</h1>
 
-      <Collapse defaultActiveKey={["0"]}>
+      {/* <Collapse defaultActiveKey={["0"]}>
         <Panel
           key="1"
           collapsible="header"
@@ -188,13 +188,12 @@ const Rankings = () => {
             tempore est asperiores?
           </p>
         </Panel>
-      </Collapse>
+      </Collapse> */}
 
       <div className="container">
         <div className="row">
           <div className="col-6">
-            Carreras con mas atrasados en las ultimas semanas. GRAFICO
-            RAPIDOOO!!
+            Carreras con mas atrasados en las ultimas semanas.
             <BarChart chartData={carrData} chartOptions={options} />
             {/* <PieChart chartData={carrData} /> */}
             {/* <LineChart chartData={carrData} chartOptions={options} /> */}
