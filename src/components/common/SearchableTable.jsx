@@ -17,6 +17,7 @@ import { GoThreeBars } from 'react-icons/go';
  */
 const SearchableTable = ({
   alumnos = false, // si es tabla alumnos se valida la propiedad alumnoActivo para responder.
+  ejemplares = false, // si es tabla de ejemplares se deben bloquear los que estan con estado DISPONIBLE
   columns,
   expandableRows = false,
   expandableItem,
@@ -56,6 +57,16 @@ const SearchableTable = ({
           message.error('El alumno seleccionado no está activo', 2.5);
         }
       });
+
+
+      if(ejemplares){
+        selectedData.forEach((i) => {
+          if (i.estado === 'DISPONIBLE') {
+            message.error('El ejemplar ya fue retornado', 2.5);
+          }
+        });
+      }
+
     }
 
     onChange(selectedData);
@@ -84,7 +95,19 @@ const SearchableTable = ({
           return;
         }
       }
-      
+
+      if(ejemplares){
+        let flag = false;
+        row.forEach((i) => {
+          if (i.ejemplar.estado === 'DISPONIBLE') {
+            flag = true;
+          }
+        });
+        if(flag) {
+          message.error('El ejemplar ya fue retornado', 2.5);
+          return;
+        }
+      }
       setSelectedRows(rowKeys);
       onChange(row);
     },

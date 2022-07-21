@@ -60,6 +60,7 @@ const PrestamosList = ({
         icon: "success",
         confirmButtonText: "Ok",
       });
+      setDevolucionesModalVisible(false);
       clearPrestamoState();
       history.push("/prestamos");
     } else if (prestamos.onStartFetch) {
@@ -119,7 +120,7 @@ const PrestamosList = ({
       key: "acciones",
       render: (row, record, index) => (
         <div className="administration-actions-container">
-          <Tooltip title="Ver detalle">
+          {/* <Tooltip title="Ver detalle">
             <button
               style={{ border: "none" }}
               onClick={() => {
@@ -136,7 +137,7 @@ const PrestamosList = ({
                 // }}
               />
             </button>
-          </Tooltip>
+          </Tooltip> */}
 
           {/* VALIDAR SI EL PRESTAMO ESTA PARA SER DEVUELTO */}
 
@@ -363,71 +364,85 @@ const PrestamosList = ({
               type="primary"
               onClick={() => {
                 // alert('new button');
-                MySwal.fire({
-                  title: "Actualizar Prestamo",
-                  text: `Revisar en el backend la logica de esto, ya que tiene fallas!!!`,
-                  // html:
-                  //   "You can use <b>bold text</b>, " +
-                  //   '<a href="//sweetalert2.github.io">links</a> ' +
-                  //   "and other HTML tags",
-                  html: `<div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">Ojbeto</h5>
-                    <p className="card-text">
-                      <b>Codigo:</b>{" "}
-                      ${prestamoData.prestamoId ? prestamoData.prestamoId : "----"}
-                      <br />
-                      <b>Alumno:</b>{" "}
-                      ${prestamoData.alumno && prestamoData.alumno.nombreAlumno
-                        ? prestamoData.alumno.nombreAlumno
-                        : "----"}
-                      <br />
-                      <b>Estado:</b>{" "}
-                      ${prestamoData.estado ? prestamoData.estado : "----"}
-                      <br />
-                      <b>Fecha Inicio:</b>{" "}
-                      ${prestamoData.fechaInicio
-                        ? moment(prestamoData.fechaInicio).format("DD-MM-YYYY")
-                        : "----"}
-                      <br />
-                      <b>Fecha Termino:</b>{" "}
-                      ${prestamoData.fechaFin
-                        ? moment(prestamoData.fechaFin).format("DD-MM-YYYY")
-                        : "----"}
-                    </p>
-                  </div>
-                </div>`,
+                // MySwal.fire({
+                //   title: "Actualizar Prestamo",
+                //   text: `Revisar en el backend la logica de esto, ya que tiene fallas!!!`,
+                //   // html:
+                //   //   "You can use <b>bold text</b>, " +
+                //   //   '<a href="//sweetalert2.github.io">links</a> ' +
+                //   //   "and other HTML tags",
+                //   html: `<div className="card">
+                //   <div className="card-body">
+                //     <h5 className="card-title">Ojbeto</h5>
+                //     <p className="card-text">
+                //       <b>Codigo:</b>{" "}
+                //       ${prestamoData.prestamoId ? prestamoData.prestamoId : "----"}
+                //       <br />
+                //       <b>Alumno:</b>{" "}
+                //       ${prestamoData.alumno && prestamoData.alumno.nombreAlumno
+                //         ? prestamoData.alumno.nombreAlumno
+                //         : "----"}
+                //       <br />
+                //       <b>Estado:</b>{" "}
+                //       ${prestamoData.estado ? prestamoData.estado : "----"}
+                //       <br />
+                //       <b>Fecha Inicio:</b>{" "}
+                //       ${prestamoData.fechaInicio
+                //         ? moment(prestamoData.fechaInicio).format("DD-MM-YYYY")
+                //         : "----"}
+                //       <br />
+                //       <b>Fecha Termino:</b>{" "}
+                //       ${prestamoData.fechaFin
+                //         ? moment(prestamoData.fechaFin).format("DD-MM-YYYY")
+                //         : "----"}
+                //     </p>
+                //   </div>
+                // </div>`,
 
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Si, Ir a revisar!!",
-                  cancelButtonText: "Cancelar",
-                }).then((result) => {
-                  if (result.value) {
-                    // TODO: Realizar devoluciones de ejemplares.
-                    // usar contador de array de ejemplares???
-                    // cuando el contador llegue a 0, se termina el prestamo🐱‍👤.
+                //   icon: "warning",
+                //   showCancelButton: true,
+                //   confirmButtonColor: "#3085d6",
+                //   cancelButtonColor: "#d33",
+                //   confirmButtonText: "Si, Ir a revisar!!",
+                //   cancelButtonText: "Cancelar",
+                // }).then((result) => {
+                //   if (result.value) {
+                //     // TODO: Realizar devoluciones de ejemplares.
+                //     // usar contador de array de ejemplares???
+                //     // cuando el contador llegue a 0, se termina el prestamo🐱‍👤.
 
-                    console.log(
-                      `id del prestamo para enviarlo por la url: ${prestamoData.prestamoId}`
-                    );
-                    console.log("selectedEjemplares");
-                    console.log(selectedEjemplares);
+                //     console.log(
+                //       `id del prestamo para enviarlo por la url: ${prestamoData.prestamoId}`
+                //     );
+                //     console.log("selectedEjemplares");
+                //     console.log(selectedEjemplares);
 
-                    // TODO: Validar que el usuario haya seleccionado al menos un ejemplar.
+                //     // TODO: Validar que el usuario haya seleccionado al menos un ejemplar.
 
-                    const ejemplares = selectedEjemplares.map((ejemplar) => {
-                      return ejemplar;
-                    });
+                //     const ejemplares = selectedEjemplares.map((ejemplar) => {
+                //       return ejemplar;
+                //     });
 
-                    console.log("ejemplares");
-                    console.log(ejemplares);
+                //     console.log("ejemplares");
+                //     console.log(ejemplares);
 
-                    updatePrestamo(prestamoData.prestamoId, ejemplares);
-                  }
-                });
+                //     updatePrestamo(prestamoData.prestamoId, ejemplares);
+                //   }
+                // });
+             
+                if(!selectedEjemplares || selectedEjemplares.length <= 0){
+                  MySwal.fire({
+                    title: "Error",
+                    text: "Debe seleccionar al menos un ejemplar para realizar la devolución.",
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                  });
+                  return;
+                }
+                
+              
+                updatePrestamo(prestamoData.prestamoId, selectedEjemplares);
+                setDevolucionesModalVisible(false);
               }}
             >
               Guardar Cambios
@@ -435,13 +450,13 @@ const PrestamosList = ({
           </div>
         }
       >
-        <button
+        {/* <button
           onClick={() => {
             console.log(prestamoData);
           }}
         >
           Ver Prestamos Data.
-        </button>
+        </button> */}
         <Row gutter={16}>
           <Col span={16}>
             <SearchableTable
@@ -451,6 +466,7 @@ const PrestamosList = ({
                   ? [...prestamoData.prestamoEjemplars]
                   : []
               }
+              ejemplares={true}
               rowKey="ejemplarId"
               onChange={(row) => {
                 setSelectedEjemeplares(row);

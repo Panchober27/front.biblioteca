@@ -169,7 +169,7 @@ const Prestamos = ({
 
   return (
     <>
-      <button
+      {/* <button
         onClick={() => {
           console.log(prestamoData);
           const fechaDevolucion = prestamoData.libros.reduce((fechaDev, l) => {
@@ -181,14 +181,13 @@ const Prestamos = ({
         }}
       >
         Ver prestamoData
-      </button>
-
+      </button> */}
       <Row>
         <Col span={12}>
           {/* DIV contenedor de los datos de preview */}
           <div>
             <h2>Datos del Prestamo</h2>
-            <p>llenar mientras el usuario interactua</p>
+            {/* <p>llenar mientras el usuario interactua</p> */}
             {/* input autocompletable? */}
             <h3>Alumno:</h3>
             <p>
@@ -210,7 +209,6 @@ const Prestamos = ({
                 </>
               )}
             </p>
-            <br />
             <h3>Libros:</h3>
             <p>
               {libros.length ? (
@@ -278,6 +276,24 @@ const Prestamos = ({
                     ...prestamoData,
                     alumno: alumno,
                   });
+
+                  if(prestamoData.libros.length > 0) {
+                    prestamoData.libros.forEach(l => {
+                      if(l.fechaRetorno === "" || l.fechaRetorno === null) {
+                        MySwal.fire({
+                          title: "Error",
+                          text: "Falta la fecha de devolucion de alguno de los libros",
+                          icon: "error",
+                          confirmButtonText: "Ok",
+                        });
+                        return;
+                      }
+                    });
+
+                  } else {
+                    message.error("No hay libros seleccionados");
+                    return;
+                  }
 
 
                   // TODO: MOSTRAR VISTA PREVIA FINAL DEL PRESTAMO A PRESTAR
